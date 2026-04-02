@@ -14,6 +14,7 @@ import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as PSlugRouteImport } from './routes/p/$slug'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as ApiVibeAssistantRouteImport } from './routes/api/vibe-assistant'
 import { Route as AppPagesIdRouteImport } from './routes/app/pages/$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiVibeAssistantRoute = ApiVibeAssistantRouteImport.update({
+  id: '/api/vibe-assistant',
+  path: '/api/vibe-assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppPagesIdRoute = AppPagesIdRouteImport.update({
   id: '/app/pages/$id',
   path: '/app/pages/$id',
@@ -49,6 +55,7 @@ const AppPagesIdRoute = AppPagesIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/vibe-assistant': typeof ApiVibeAssistantRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/vibe-assistant': typeof ApiVibeAssistantRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/vibe-assistant': typeof ApiVibeAssistantRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
@@ -76,6 +85,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/api/vibe-assistant'
     | '/auth/login'
     | '/auth/signup'
     | '/p/$slug'
@@ -84,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/api/vibe-assistant'
     | '/auth/login'
     | '/auth/signup'
     | '/p/$slug'
@@ -92,6 +103,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/api/vibe-assistant'
     | '/auth/login'
     | '/auth/signup'
     | '/p/$slug'
@@ -101,6 +113,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiVibeAssistantRoute: typeof ApiVibeAssistantRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
   PSlugRoute: typeof PSlugRoute
@@ -145,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/vibe-assistant': {
+      id: '/api/vibe-assistant'
+      path: '/api/vibe-assistant'
+      fullPath: '/api/vibe-assistant'
+      preLoaderRoute: typeof ApiVibeAssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app/pages/$id': {
       id: '/app/pages/$id'
       path: '/app/pages/$id'
@@ -157,6 +177,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiVibeAssistantRoute: ApiVibeAssistantRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
   PSlugRoute: PSlugRoute,

@@ -9,6 +9,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import * as React from 'react'
 import appCss from '#/styles/styles.css?url'
+import themeCss from '#/styles/theme-tokens.css?url'
 import { TooltipProvider } from '#/components/ui/tooltip'
 
 interface MyRouterContext {
@@ -23,6 +24,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
+      { rel: 'stylesheet', href: themeCss },
       { rel: 'icon', href: '/favicon.ico' },
     ],
   }),

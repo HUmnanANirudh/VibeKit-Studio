@@ -1,0 +1,122 @@
+[data-theme="minimal"] {
+  --vk-bg: #fafafa;
+  --vk-surface: #ffffff;
+  --vk-surface-alt: #f4f4f5;
+  --vk-text: #111111;
+  --vk-text-muted: #71717a;
+  --vk-accent: #18181b;
+  --vk-accent-fg: #ffffff;
+  --vk-border: #e4e4e7;
+  --vk-radius: 4px;
+  --vk-radius-lg: 8px;
+  --vk-font-heading: 'Playfair Display', serif;
+  --vk-font-body: 'Inter', sans-serif;
+  --vk-spacing-section: 96px;
+  --vk-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --vk-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+[data-theme="neo-brutal"] {
+  --vk-bg: #f5f0e8;
+  --vk-surface: #fdfaf4;
+  --vk-surface-alt: #eee8d8;
+  --vk-text: #0a0a0a;
+  --vk-text-muted: #444;
+  --vk-accent: #ff3f00;
+  --vk-accent-fg: #fff;
+  --vk-border: #0a0a0a;
+  --vk-radius: 0px;
+  --vk-radius-lg: 0px;
+  --vk-font-heading: 'Space Grotesk', sans-serif;
+  --vk-font-body: 'Space Grotesk', sans-serif;
+  --vk-spacing-section: 80px;
+  --vk-shadow: 3px 3px 0 #0a0a0a;
+  --vk-shadow-lg: 5px 5px 0 #0a0a0a;
+}
+[data-theme="dark-neon"] {
+  --vk-bg: #090909;
+  --vk-surface: #111111;
+  --vk-surface-alt: #1a1a1a;
+  --vk-text: #f0f0f0;
+  --vk-text-muted: #888;
+  --vk-accent: #00ffb2;
+  --vk-accent-fg: #000;
+  --vk-border: #2a2a2a;
+  --vk-radius: 6px;
+  --vk-radius-lg: 12px;
+  --vk-font-heading: 'Space Grotesk', sans-serif;
+  --vk-font-body: 'Inter', sans-serif;
+  --vk-spacing-section: 96px;
+  --vk-shadow: 0 0 20px rgba(0, 255, 178, 0.15);
+  --vk-shadow-lg: 0 0 40px rgba(0, 255, 178, 0.2);
+}
+[data-theme="pastel"] {
+  --vk-bg: #fef6fb;
+  --vk-surface: #fff;
+  --vk-surface-alt: #fde8f5;
+  --vk-text: #2d1b3d;
+  --vk-text-muted: #8b6ba0;
+  --vk-accent: #c084fc;
+  --vk-accent-fg: #fff;
+  --vk-border: #e9d5f5;
+  --vk-radius: 16px;
+  --vk-radius-lg: 24px;
+  --vk-font-heading: 'Playfair Display', serif;
+  --vk-font-body: 'Inter', sans-serif;
+  --vk-spacing-section: 80px;
+  --vk-shadow: 0 4px 20px rgba(192, 132, 252, 0.15);
+  --vk-shadow-lg: 0 8px 40px rgba(192, 132, 252, 0.2);
+}
+[data-theme="luxury"] {
+  --vk-bg: #0f0e0d;
+  --vk-surface: #1a1815;
+  --vk-surface-alt: #252220;
+  --vk-text: #e8dcc8;
+  --vk-text-muted: #9a8e7a;
+  --vk-accent: #c9a96e;
+  --vk-accent-fg: #0f0e0d;
+  --vk-border: #2e2b26;
+  --vk-radius: 2px;
+  --vk-radius-lg: 4px;
+  --vk-font-heading: 'DM Serif Display', 'Playfair Display', serif;
+  --vk-font-body: 'Inter', sans-serif;
+  --vk-spacing-section: 120px;
+  --vk-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  --vk-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+[data-theme="retro"] {
+  --vk-bg: #1a1a2e;
+  --vk-surface: #16213e;
+  --vk-surface-alt: #0f3460;
+  --vk-text: #e0e0e0;
+  --vk-text-muted: #a0a0b0;
+  --vk-accent: #ffd700;
+  --vk-accent-fg: #1a1a2e;
+  --vk-border: #0f3460;
+  --vk-radius: 0px;
+  --vk-radius-lg: 2px;
+  --vk-font-heading: 'Space Mono', 'Courier New', monospace;
+  --vk-font-body: 'Space Mono', 'Courier New', monospace;
+  --vk-spacing-section: 80px;
+  --vk-shadow: 2px 2px 0 #ffd700;
+  --vk-shadow-lg: 4px 4px 0 #ffd700;
+}
+
+/* Vibe Editor Base Styles (WYSWYG) */
+.vk-editor-root {
+  background: var(--vk-bg);
+  color: var(--vk-text);
+  font-family: var(--vk-font-body);
+  line-height: 1.6;
+}
+
+.vk-section { padding: var(--vk-spacing-section, 96px) 0; }
+.vk-container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+.vk-hero-title { font-size: clamp(2rem, 5vw, 4.5rem); font-weight: 900; margin-bottom: 20px; font-family: var(--vk-font-heading); }
+.vk-hero-subtitle { font-size: clamp(1rem, 2.5vw, 1.35rem); color: var(--vk-text-muted); max-width: 600px; margin: 0 auto 36px; }
+
+.vk-btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 28px; font-family: var(--vk-font-body); font-size: 15px; font-weight: 600; border-radius: var(--vk-radius); cursor: pointer; border: 2px solid transparent; text-decoration: none; transition: all 0.2s ease; }
+.vk-btn-primary { background: var(--vk-accent); color: var(--vk-accent-fg); border-color: var(--vk-accent); box-shadow: var(--vk-shadow); }
+
+.vk-features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+.vk-card { background: var(--vk-surface); border: 1px solid var(--vk-border); border-radius: var(--vk-radius-lg); padding: 24px; box-shadow: var(--vk-shadow); }
