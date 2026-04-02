@@ -12,7 +12,9 @@ export function Contact({ heading, subheading, className }: ContactProps) {
   return (
     <section className={cn('vk-section bg-background', className)} id="contact">
       <div className="vk-container max-w-2xl mx-auto text-center">
-        <h2 className="vk-section-heading mb-4 text-3xl font-bold">{heading}</h2>
+        <h2 className="vk-section-heading mb-4 text-3xl font-bold">
+          {heading}
+        </h2>
         <p className="vk-hero-subtitle mb-10">{subheading}</p>
         <form className="grid gap-6 text-left">
           <div className="grid gap-2">

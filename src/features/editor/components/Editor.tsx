@@ -17,9 +17,13 @@ import {
 } from 'lucide-react'
 import type { PageRenderData } from '#/types'
 import { Puck } from '@puckeditor/core'
-import "@puckeditor/core/puck.css"
+import '@puckeditor/core/puck.css'
 import { config } from '../lib/puck-config'
-import { toPuckData, fromPuckData, fromAssistantUpdate } from '../lib/puck-bridge'
+import {
+  toPuckData,
+  fromPuckData,
+  fromAssistantUpdate,
+} from '../lib/puck-bridge'
 import { VibeAssistant } from './VibeAssistant'
 
 interface EditorProps {
@@ -31,7 +35,9 @@ export function Editor({ id }: EditorProps) {
   const { data: serverPage } = useSuspenseQuery(pageQueryOptions(id))
 
   const [page, setPage] = useState<PageRenderData>(serverPage)
-  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+  const [saveState, setSaveState] = useState<
+    'idle' | 'saving' | 'saved' | 'error'
+  >('idle')
   const [isAssistantOpen, setIsAssistantOpen] = useState(false)
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -91,7 +97,7 @@ export function Editor({ id }: EditorProps) {
   const handlePuckChange = (data: any) => {
     const updated = fromPuckData(data, page)
     setPage(updated)
-    
+
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
     setSaveState('saving')
     saveTimerRef.current = setTimeout(() => saveMutation.mutate(updated), 1500)
@@ -105,9 +111,9 @@ export function Editor({ id }: EditorProps) {
 
   return (
     <div className="h-screen bg-background flex flex-col font-sans overflow-hidden">
-      <Puck 
-        config={config} 
-        data={puckData} 
+      <Puck
+        config={config}
+        data={puckData}
         onChange={handlePuckChange}
         headerTitle={page.title}
         headerPath="/app"
@@ -154,9 +160,9 @@ export function Editor({ id }: EditorProps) {
                 )}
               </div>
 
-              <Button 
-                variant={isAssistantOpen ? "secondary" : "outline"} 
-                size="sm" 
+              <Button
+                variant={isAssistantOpen ? 'secondary' : 'outline'}
+                size="sm"
                 onClick={() => setIsAssistantOpen(!isAssistantOpen)}
                 className="h-8 gap-2 font-bold bg-primary/5 hover:bg-primary/10 border-primary/20 text-primary"
               >
@@ -169,7 +175,9 @@ export function Editor({ id }: EditorProps) {
               <Button
                 size="sm"
                 className="h-8"
-                onClick={() => publishMutation.mutate(page.status !== 'published')}
+                onClick={() =>
+                  publishMutation.mutate(page.status !== 'published')
+                }
                 disabled={publishMutation.isPending}
               >
                 {publishMutation.isPending ? (
@@ -183,17 +191,17 @@ export function Editor({ id }: EditorProps) {
               </Button>
               {children}
             </div>
-          )
+          ),
         }}
       >
         <div className="flex-1 flex overflow-hidden relative">
           <div className="flex-1 flex flex-col min-w-0">
             <Puck.Layout />
           </div>
-          
+
           {isAssistantOpen && (
             <div className="z-[100] absolute inset-y-0 right-0 lg:relative">
-              <VibeAssistant 
+              <VibeAssistant
                 onUpdatePage={handleAssistantUpdate}
                 onClose={() => setIsAssistantOpen(false)}
               />

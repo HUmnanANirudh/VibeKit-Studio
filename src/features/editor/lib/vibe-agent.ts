@@ -5,16 +5,25 @@ import { z } from 'zod'
 export const updatePageTool = tool({
   description: 'Update the page structure with new content and theme.',
   inputSchema: z.object({
-    theme: z.enum(['minimal', 'neo-brutal', 'dark-neon', 'pastel', 'luxury', 'retro']),
+    theme: z.enum([
+      'minimal',
+      'neo-brutal',
+      'dark-neon',
+      'pastel',
+      'luxury',
+      'retro',
+    ]),
     title: z.string().describe('The page title'),
-    blocks: z.array(z.object({
-      type: z.enum(['Hero', 'Features', 'Gallery', 'Contact']),
-      props: z.record(z.string(), z.any())
-    }))
+    blocks: z.array(
+      z.object({
+        type: z.enum(['Hero', 'Features', 'Gallery', 'Contact']),
+        props: z.record(z.string(), z.any()),
+      }),
+    ),
   }),
   execute: async (args) => {
     return args
-  }
+  },
 })
 
 export const vibeAgent = new ToolLoopAgent({

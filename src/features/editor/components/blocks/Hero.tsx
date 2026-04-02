@@ -5,7 +5,13 @@ export interface HeroProps extends HeroSection {
   className?: string
 }
 
-export function Hero({ title, subtitle, buttonText, buttonUrl, className }: HeroProps) {
+export function Hero({
+  title,
+  subtitle,
+  buttonText,
+  buttonUrl,
+  className,
+}: HeroProps) {
   return (
     <section className={cn('vk-section vk-hero-section', className)}>
       <div className="vk-container">
