@@ -34,7 +34,12 @@ interface NewPageModalProps {
   isPending: boolean
 }
 
-export function NewPageModal({ open, onOpenChange, onCreate, isPending }: NewPageModalProps) {
+export function NewPageModal({
+  open,
+  onOpenChange,
+  onCreate,
+  isPending,
+}: NewPageModalProps) {
   const [title, setTitle] = useState('')
   const [theme, setTheme] = useState('minimal')
 
@@ -51,7 +56,7 @@ export function NewPageModal({ open, onOpenChange, onCreate, isPending }: NewPag
           <DialogHeader>
             <DialogTitle>Create new page</DialogTitle>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="title">Page title</Label>
@@ -64,10 +69,14 @@ export function NewPageModal({ open, onOpenChange, onCreate, isPending }: NewPag
                 disabled={isPending}
               />
             </div>
-            
+
             <div className="grid gap-2">
               <Label htmlFor="theme">Choose a vibe</Label>
-              <Select value={theme} onValueChange={setTheme} disabled={isPending}>
+              <Select
+                value={theme}
+                onValueChange={setTheme}
+                disabled={isPending}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a theme" />
                 </SelectTrigger>
@@ -75,7 +84,10 @@ export function NewPageModal({ open, onOpenChange, onCreate, isPending }: NewPag
                   {THEMES.map((t) => (
                     <SelectItem key={t.value} value={t.value}>
                       <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full" style={{ background: t.color }} />
+                        <div
+                          className="w-3 h-3 rounded-full"
+                          style={{ background: t.color }}
+                        />
                         {t.label}
                       </div>
                     </SelectItem>

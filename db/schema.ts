@@ -1,4 +1,12 @@
-import { pgTable, text, integer, boolean, timestamp, uuid, jsonb } from 'drizzle-orm/pg-core'
+import {
+  pgTable,
+  text,
+  integer,
+  boolean,
+  timestamp,
+  uuid,
+  jsonb,
+} from 'drizzle-orm/pg-core'
 
 // ============================================
 // USERS TABLE
@@ -18,7 +26,9 @@ export const users = pgTable('users', {
 // ============================================
 export const pages = pgTable('pages', {
   id: uuid('id').primaryKey().defaultRandom(),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
   title: text('title').notNull(),
   slug: text('slug').notNull().unique(),
   theme: text('theme').notNull().default('minimal'), // one of 6 vibe presets
@@ -33,24 +43,47 @@ export const pages = pgTable('pages', {
   }),
 
   featuresSection: jsonb('features_section').default([
-    { title: 'Feature One', description: 'Describe your first amazing feature here.' },
-    { title: 'Feature Two', description: 'Explain what makes this feature special.' },
-    { title: 'Feature Three', description: 'Share another benefit or capability.' },
+    {
+      title: 'Feature One',
+      description: 'Describe your first amazing feature here.',
+    },
+    {
+      title: 'Feature Two',
+      description: 'Explain what makes this feature special.',
+    },
+    {
+      title: 'Feature Three',
+      description: 'Share another benefit or capability.',
+    },
   ]),
 
   gallerySection: jsonb('gallery_section').default([
-    { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800', alt: 'Gallery image 1' },
-    { url: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800', alt: 'Gallery image 2' },
-    { url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800', alt: 'Gallery image 3' },
+    {
+      url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
+      alt: 'Gallery image 1',
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800',
+      alt: 'Gallery image 2',
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800',
+      alt: 'Gallery image 3',
+    },
   ]),
 
   contactSection: jsonb('contact_section').default({
     heading: 'Get In Touch',
-    subheading: 'We\'d love to hear from you.',
+    subheading: "We'd love to hear from you.",
   }),
 
   // Section order (array of section names)
-  sectionOrder: jsonb('section_order').default(['hero', 'features', 'gallery', 'contact']),
+  sectionOrder: jsonb('section_order').default([
+    'hero',
+    'features',
+    'gallery',
+    'contact',
+  ]),
 
   viewCount: integer('view_count').notNull().default(0),
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -64,7 +97,9 @@ export const pages = pgTable('pages', {
 // ============================================
 export const pageViews = pgTable('page_views', {
   id: uuid('id').primaryKey().defaultRandom(),
-  pageId: uuid('page_id').notNull().references(() => pages.id, { onDelete: 'cascade' }),
+  pageId: uuid('page_id')
+    .notNull()
+    .references(() => pages.id, { onDelete: 'cascade' }),
   viewedAt: timestamp('viewed_at').defaultNow().notNull(),
   userAgent: text('user_agent'),
   referer: text('referer'),
@@ -76,7 +111,9 @@ export const pageViews = pgTable('page_views', {
 // ============================================
 export const contactSubmissions = pgTable('contact_submissions', {
   id: uuid('id').primaryKey().defaultRandom(),
-  pageId: uuid('page_id').notNull().references(() => pages.id, { onDelete: 'cascade' }),
+  pageId: uuid('page_id')
+    .notNull()
+    .references(() => pages.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   email: text('email').notNull(),
   message: text('message').notNull(),

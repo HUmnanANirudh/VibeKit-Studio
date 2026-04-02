@@ -3,7 +3,6 @@ name: tanstack-router
 description: Type-safe routing for React and Solid applications with first-class search params, data loading, and seamless integration with the React ecosystem.
 ---
 
-
 ## Overview
 
 TanStack Router is a fully type-safe router for React (and Solid) applications. It provides file-based routing, first-class search parameter management, built-in data loading, code splitting, and deep TypeScript integration. It serves as the routing foundation for TanStack Start (the full-stack framework).
@@ -29,7 +28,11 @@ npm install -D @tanstack/router-cli
 Routes are organized in a tree structure. The root route is the top-level layout, and child routes nest underneath.
 
 ```tsx
-import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router'
+import {
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from '@tanstack/react-router'
 
 const rootRoute = createRootRoute({
   component: RootLayout,
@@ -70,22 +73,23 @@ export default defineConfig({
 
 #### File Naming Conventions
 
-| File Pattern | Route Type | Example Path |
-|---|---|---|
-| `__root.tsx` | Root layout | N/A (wraps all) |
-| `index.tsx` | Index route | `/` |
-| `about.tsx` | Static route | `/about` |
-| `$postId.tsx` | Dynamic param | `/posts/$postId` |
-| `posts.tsx` | Layout route | `/posts/*` (layout) |
-| `posts/index.tsx` | Nested index | `/posts` |
-| `posts/$postId.tsx` | Nested dynamic | `/posts/123` |
-| `posts_.$postId.tsx` | Pathless layout | `/posts/123` (different layout) |
-| `_layout.tsx` | Pathless layout | N/A (groups routes) |
-| `_layout/dashboard.tsx` | Grouped route | `/dashboard` |
-| `$.tsx` | Splat/catch-all | `/*` |
-| `posts.$postId.edit.tsx` | Dot notation | `/posts/123/edit` |
+| File Pattern             | Route Type      | Example Path                    |
+| ------------------------ | --------------- | ------------------------------- |
+| `__root.tsx`             | Root layout     | N/A (wraps all)                 |
+| `index.tsx`              | Index route     | `/`                             |
+| `about.tsx`              | Static route    | `/about`                        |
+| `$postId.tsx`            | Dynamic param   | `/posts/$postId`                |
+| `posts.tsx`              | Layout route    | `/posts/*` (layout)             |
+| `posts/index.tsx`        | Nested index    | `/posts`                        |
+| `posts/$postId.tsx`      | Nested dynamic  | `/posts/123`                    |
+| `posts_.$postId.tsx`     | Pathless layout | `/posts/123` (different layout) |
+| `_layout.tsx`            | Pathless layout | N/A (groups routes)             |
+| `_layout/dashboard.tsx`  | Grouped route   | `/dashboard`                    |
+| `$.tsx`                  | Splat/catch-all | `/*`                            |
+| `posts.$postId.edit.tsx` | Dot notation    | `/posts/123/edit`               |
 
 #### Special Prefixes
+
 - `_` prefix: Pathless routes (layout groups without URL segment)
 - `$` prefix: Dynamic path parameters
 - `(folder)` parentheses: Route groups (organizational, no URL impact)
@@ -318,10 +322,7 @@ function Pagination() {
 }
 
 // Or via Link component
-<Link
-  to="/posts"
-  search={(prev) => ({ ...prev, page: 2 })}
->
+;<Link to="/posts" search={(prev) => ({ ...prev, page: 2 })}>
   Page 2
 </Link>
 ```
@@ -611,7 +612,7 @@ export const Route = createFileRoute('/posts')({
 Display a different URL than the actual route:
 
 ```tsx
-<Link
+;<Link
   to="/photos/$photoId"
   params={{ photoId: photo.id }}
   mask={{ to: '/photos', search: { photoId: photo.id } }}
@@ -691,21 +692,21 @@ function PostsComponent() {
 
 ## Router Hooks Reference
 
-| Hook | Purpose |
-|------|---------|
-| `useRouter()` | Access router instance |
-| `useRouterState()` | Subscribe to router state |
-| `useParams()` | Get route path params |
-| `useSearch()` | Get validated search params |
-| `useLoaderData()` | Get route loader data |
-| `useRouteContext()` | Get route context |
-| `useNavigate()` | Get navigate function |
-| `useLocation()` | Get current location |
-| `useMatches()` | Get all matched routes |
-| `useMatch()` | Get specific route match |
-| `useBlocker()` | Block navigation |
-| `useLinkProps()` | Get link props for custom components |
-| `useMatchRoute()` | Check if a route matches |
+| Hook                | Purpose                              |
+| ------------------- | ------------------------------------ |
+| `useRouter()`       | Access router instance               |
+| `useRouterState()`  | Subscribe to router state            |
+| `useParams()`       | Get route path params                |
+| `useSearch()`       | Get validated search params          |
+| `useLoaderData()`   | Get route loader data                |
+| `useRouteContext()` | Get route context                    |
+| `useNavigate()`     | Get navigate function                |
+| `useLocation()`     | Get current location                 |
+| `useMatches()`      | Get all matched routes               |
+| `useMatch()`        | Get specific route match             |
+| `useBlocker()`      | Block navigation                     |
+| `useLinkProps()`    | Get link props for custom components |
+| `useMatchRoute()`   | Check if a route matches             |
 
 ## Best Practices
 

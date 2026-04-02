@@ -10,7 +10,9 @@ interface ContactEditorProps {
 export function ContactEditor({ data, onChange }: ContactEditorProps) {
   return (
     <div className="grid gap-4">
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground text-card-foreground">Contact Section</h3>
+      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground text-card-foreground">
+        Contact Section
+      </h3>
       <div className="grid gap-1.5">
         <Label htmlFor="contact-heading">Heading</Label>
         <Input

@@ -3,12 +3,23 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '#/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from '#/components/ui/card'
 import { Loader2, AlertCircle } from 'lucide-react'
 
 export function SignupForm() {
   const navigate = useNavigate()
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' })
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+  })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -40,11 +51,16 @@ export function SignupForm() {
     <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4">
       <Card className="w-full max-w-[400px] shadow-xl border-border/50">
         <CardHeader className="space-y-1 text-center">
-          <Link to="/" className="text-2xl font-black italic tracking-tighter mb-4 block">
+          <Link
+            to="/"
+            className="text-2xl font-black italic tracking-tighter mb-4 block"
+          >
             VIBE<span className="text-primary">KIT</span>
           </Link>
           <CardTitle className="text-2xl">Create account</CardTitle>
-          <CardDescription>Join VibeKit Studio and start building</CardDescription>
+          <CardDescription>
+            Join VibeKit Studio and start building
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -55,15 +71,42 @@ export function SignupForm() {
             )}
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
-              <Input id="name" placeholder="John Doe" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
+              <Input
+                id="name"
+                placeholder="John Doe"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                required
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="you@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                required
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" placeholder="••••••••" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required minLength={8} />
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                required
+                minLength={8}
+              />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -73,7 +116,13 @@ export function SignupForm() {
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
-            Already have an account? <Link to="/auth/login" className="text-primary font-semibold hover:underline">Log in</Link>
+            Already have an account?{' '}
+            <Link
+              to="/auth/login"
+              className="text-primary font-semibold hover:underline"
+            >
+              Log in
+            </Link>
           </p>
         </CardFooter>
       </Card>

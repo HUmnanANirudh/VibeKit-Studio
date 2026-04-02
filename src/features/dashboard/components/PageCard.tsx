@@ -30,12 +30,16 @@ export function PageCard({ page, onDuplicate, isDuplicating }: PageCardProps) {
             style={{ background: THEMES[page.theme]?.color || '#999' }}
             title={THEMES[page.theme]?.label}
           />
-          <Badge variant={page.status === 'published' ? 'default' : 'secondary'}>
+          <Badge
+            variant={page.status === 'published' ? 'default' : 'secondary'}
+          >
             {page.status}
           </Badge>
         </div>
-        
-        <h3 className="text-lg font-bold mb-1 truncate text-card-foreground">{page.title}</h3>
+
+        <h3 className="text-lg font-bold mb-1 truncate text-card-foreground">
+          {page.title}
+        </h3>
         <p className="text-sm text-muted-foreground mb-4">
           /{page.slug} · {page.viewCount || 0} views
         </p>
@@ -47,7 +51,7 @@ export function PageCard({ page, onDuplicate, isDuplicating }: PageCardProps) {
               Edit
             </Link>
           </Button>
-          
+
           <Button
             variant="outline"
             size="icon"

@@ -1,11 +1,22 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { useSuspenseQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  useSuspenseQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
 import { pagesQueryOptions } from '#/lib/queries'
 import { PageCard } from './PageCard'
 import { NewPageModal } from './NewPageModal'
 import { Button } from '#/components/ui/button'
-import { Plus, LogOut, Layout, Rocket, FileText, MousePointer2 } from 'lucide-react'
+import {
+  Plus,
+  LogOut,
+  Layout,
+  Rocket,
+  FileText,
+  MousePointer2,
+} from 'lucide-react'
 
 export function Dashboard() {
   const navigate = useNavigate()
@@ -42,12 +53,15 @@ export function Dashboard() {
     mutationFn: async (id: string) => {
       const res = await fetch(`/api/pages/${id}/duplicate`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${localStorage.getItem('vk-token')}` },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('vk-token')}`,
+        },
       })
       if (!res.ok) throw new Error('Failed to duplicate')
       return res.json()
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: pagesQueryOptions.queryKey }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: pagesQueryOptions.queryKey }),
   })
 
   const logoutMutation = useMutation({
@@ -60,24 +74,44 @@ export function Dashboard() {
 
   const stats = [
     { label: 'Total Pages', value: pages.length, icon: Layout },
-    { label: 'Published', value: pages.filter(p => p.status === 'published').length, icon: Rocket },
-    { label: 'Drafts', value: pages.filter(p => p.status === 'draft').length, icon: FileText },
-    { label: 'Total Views', value: pages.reduce((a, p) => a + (p.viewCount || 0), 0), icon: MousePointer2 },
+    {
+      label: 'Published',
+      value: pages.filter((p) => p.status === 'published').length,
+      icon: Rocket,
+    },
+    {
+      label: 'Drafts',
+      value: pages.filter((p) => p.status === 'draft').length,
+      icon: FileText,
+    },
+    {
+      label: 'Total Views',
+      value: pages.reduce((a, p) => a + (p.viewCount || 0), 0),
+      icon: MousePointer2,
+    },
   ]
 
   return (
     <div className="min-h-screen bg-slate-50/50">
       <nav className="sticky top-0 z-10 w-full border-b bg-white/80 backdrop-blur-md">
         <div className="container flex h-16 items-center justify-between px-4">
-          <Link to="/" className="text-xl font-black italic tracking-tighter text-slate-900">
+          <Link
+            to="/"
+            className="text-xl font-black italic tracking-tighter text-slate-900"
+          >
             VIBE<span className="text-primary italic">KIT</span>
           </Link>
           <div className="flex items-center gap-4">
             <Button size="sm" onClick={() => setShowNewModal(true)}>
               <Plus className="mr-2 h-4 w-4" /> New Page
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => logoutMutation.mutate()}>
-              <LogOut className="mr-2 h-4 w-4" /> {logoutMutation.isPending ? '...' : 'Log out'}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => logoutMutation.mutate()}
+            >
+              <LogOut className="mr-2 h-4 w-4" />{' '}
+              {logoutMutation.isPending ? '...' : 'Log out'}
             </Button>
           </div>
         </div>
@@ -86,12 +120,17 @@ export function Dashboard() {
       <main className="container py-8 px-4">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           {stats.map((s) => (
-            <div key={s.label} className="flex items-center gap-4 rounded-xl border bg-white p-6 shadow-sm">
+            <div
+              key={s.label}
+              className="flex items-center gap-4 rounded-xl border bg-white p-6 shadow-sm"
+            >
               <div className="rounded-lg bg-primary/10 p-2 text-primary">
                 <s.icon className="h-6 w-6" />
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">{s.label}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {s.label}
+                </p>
                 <p className="text-2xl font-bold">{s.value}</p>
               </div>
             </div>
@@ -109,8 +148,12 @@ export function Dashboard() {
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed p-12 text-center bg-white shadow-sm mt-8">
             <Layout className="h-12 w-12 text-muted-foreground mb-4 opacity-20" />
             <h3 className="text-lg font-semibold">No pages yet</h3>
-            <p className="text-muted-foreground mb-6">Start building your first themed page.</p>
-            <Button onClick={() => setShowNewModal(true)}>Generate my first page</Button>
+            <p className="text-muted-foreground mb-6">
+              Start building your first themed page.
+            </p>
+            <Button onClick={() => setShowNewModal(true)}>
+              Generate my first page
+            </Button>
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -119,7 +162,10 @@ export function Dashboard() {
                 key={page.id}
                 page={page}
                 onDuplicate={(id) => duplicateMutation.mutate(id)}
-                isDuplicating={duplicateMutation.isPending && duplicateMutation.variables === page.id}
+                isDuplicating={
+                  duplicateMutation.isPending &&
+                  duplicateMutation.variables === page.id
+                }
               />
             ))}
           </div>
@@ -137,5 +183,9 @@ export function Dashboard() {
 }
 
 function Link({ to, children, ...props }: any) {
-  return <a href={to} {...props}>{children}</a>
+  return (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  )
 }

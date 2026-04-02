@@ -28,29 +28,49 @@ export default async function handler(req: Request, context: Context) {
     try {
       const { name, email, password } = await req.json()
       if (!name || !email || !password) {
-        return jsonResponse({ error: 'Name, email, and password are required.' }, 400)
+        return jsonResponse(
+          { error: 'Name, email, and password are required.' },
+          400,
+        )
       }
       if (password.length < 8) {
-        return jsonResponse({ error: 'Password must be at least 8 characters.' }, 400)
+        return jsonResponse(
+          { error: 'Password must be at least 8 characters.' },
+          400,
+        )
       }
 
       const db = getDb()
-      const existing = await db.select().from(users).where(eq(users.email, email.toLowerCase())).limit(1)
+      const existing = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email.toLowerCase()))
+        .limit(1)
       if (existing.length > 0) {
         return jsonResponse({ error: 'Email already registered.' }, 400)
       }
 
       const passwordHash = await bcrypt.hash(password, 12)
-      const [user] = await db.insert(users).values({
-        name: name.trim(),
-        email: email.toLowerCase().trim(),
-        passwordHash,
-      }).returning()
+      const [user] = await db
+        .insert(users)
+        .values({
+          name: name.trim(),
+          email: email.toLowerCase().trim(),
+          passwordHash,
+        })
+        .returning()
 
       const JWT_SECRET = Netlify.env.get('JWT_SECRET')!
-      const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '30d' })
+      const token = jwt.sign(
+        { userId: user.id, email: user.email },
+        JWT_SECRET,
+        { expiresIn: '30d' },
+      )
 
-      return jsonResponse({ token, user: { id: user.id, name: user.name, email: user.email } }, 201)
+      return jsonResponse(
+        { token, user: { id: user.id, name: user.name, email: user.email } },
+        201,
+      )
     } catch (err) {
       console.error('Signup error:', err)
       return jsonResponse({ error: 'Internal server error.' }, 500)
@@ -68,7 +88,11 @@ export default async function handler(req: Request, context: Context) {
       }
 
       const db = getDb()
-      const [user] = await db.select().from(users).where(eq(users.email, email.toLowerCase())).limit(1)
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email.toLowerCase()))
+        .limit(1)
       if (!user) {
         return jsonResponse({ error: 'Invalid email or password.' }, 401)
       }
@@ -79,9 +103,16 @@ export default async function handler(req: Request, context: Context) {
       }
 
       const JWT_SECRET = Netlify.env.get('JWT_SECRET')!
-      const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '30d' })
+      const token = jwt.sign(
+        { userId: user.id, email: user.email },
+        JWT_SECRET,
+        { expiresIn: '30d' },
+      )
 
-      return jsonResponse({ token, user: { id: user.id, name: user.name, email: user.email } })
+      return jsonResponse({
+        token,
+        user: { id: user.id, name: user.name, email: user.email },
+      })
     } catch (err) {
       console.error('Login error:', err)
       return jsonResponse({ error: 'Internal server error.' }, 500)

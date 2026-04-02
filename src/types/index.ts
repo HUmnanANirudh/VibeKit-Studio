@@ -1,4 +1,10 @@
-export type Theme = 'minimal' | 'neo-brutal' | 'dark-neon' | 'pastel' | 'luxury' | 'retro'
+export type Theme =
+  | 'minimal'
+  | 'neo-brutal'
+  | 'dark-neon'
+  | 'pastel'
+  | 'luxury'
+  | 'retro'
 
 export interface HeroSection {
   title: string

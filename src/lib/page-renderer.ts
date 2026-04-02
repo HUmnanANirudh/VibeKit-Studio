@@ -29,7 +29,16 @@ const THEME_TOKENS = `
 `
 
 export function generatePublishedPageHTML(page: PageRenderData): string {
-  const { theme, heroSection, featuresSection, gallerySection, contactSection, sectionOrder, slug, title } = page
+  const {
+    theme,
+    heroSection,
+    featuresSection,
+    gallerySection,
+    contactSection,
+    sectionOrder,
+    slug,
+    title,
+  } = page
 
   const sectionHTML: Record<string, string> = {
     hero: `
@@ -46,12 +55,16 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
         <div class="container">
           <h2 class="section-heading">Features</h2>
           <div class="features-grid">
-            ${featuresSection.map((f) => `
+            ${featuresSection
+              .map(
+                (f) => `
               <div class="feature-card card">
                 <div class="feature-icon">✦</div>
                 <h3>${f.title}</h3>
                 <p>${f.description}</p>
-              </div>`).join('')}
+              </div>`,
+              )
+              .join('')}
           </div>
         </div>
       </section>`,
@@ -61,10 +74,15 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
         <div class="container">
           <h2 class="section-heading">Gallery</h2>
           <div class="gallery-grid">
-            ${gallerySection.filter((i) => i.url).map((img) => `
+            ${gallerySection
+              .filter((i) => i.url)
+              .map(
+                (img) => `
               <div class="gallery-item">
                 <img src="${img.url}" alt="${img.alt || ''}" loading="lazy" />
-              </div>`).join('')}
+              </div>`,
+              )
+              .join('')}
           </div>
         </div>
       </section>`,

@@ -1,4 +1,4 @@
-Welcome to your new TanStack Start app! 
+Welcome to your new TanStack Start app!
 
 # Getting Started
 
@@ -40,7 +40,6 @@ If you prefer not to use Tailwind CSS:
 
 ## Linting & Formatting
 
-
 This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
 
 ```bash
@@ -48,7 +47,6 @@ npm run lint
 npm run format
 npm run check
 ```
-
 
 ## Setting up Neon
 
@@ -59,7 +57,6 @@ It is the same process as [Neon Launchpad](https://neon.new).
 > [!IMPORTANT]  
 > Claimable databases expire in 72 hours.
 
-
 ## Shadcn
 
 Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
@@ -67,7 +64,6 @@ Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
 ```bash
 pnpm dlx shadcn@latest add button
 ```
-
 
 # Resume Example
 
@@ -113,7 +109,7 @@ jobTitle: Your Job Title
 company: Company Name
 location: City, State
 startDate: 2024-01-01
-endDate: 2024-12-31  # Optional - omit for current position
+endDate: 2024-12-31 # Optional - omit for current position
 summary: Brief summary of your role
 tags:
   - React
@@ -152,8 +148,6 @@ npm run dev
 npm run build
 ```
 
-
-
 ## Routing
 
 This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
@@ -171,7 +165,7 @@ Now that you have two routes you can use a `Link` component to navigate between 
 To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
 
 ```tsx
-import { Link } from "@tanstack/react-router";
+import { Link } from '@tanstack/react-router'
 ```
 
 Then anywhere in your JSX you can use it like so:
@@ -239,11 +233,11 @@ const getServerTime = createServerFn({
 // Use in a component
 function MyComponent() {
   const [time, setTime] = useState('')
-  
+
   useEffect(() => {
     getServerTime().then(setTime)
   }, [])
-  
+
   return <div>Server time: {time}</div>
 }
 ```

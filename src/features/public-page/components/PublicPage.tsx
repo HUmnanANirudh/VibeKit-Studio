@@ -8,7 +8,7 @@ interface PublicPageProps {
 
 export function PublicPage({ slug }: PublicPageProps) {
   const { data: page } = useSuspenseQuery(publicPageQueryOptions(slug))
-  
+
   if (!page) return null
 
   return (

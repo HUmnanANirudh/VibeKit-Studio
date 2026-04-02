@@ -19,7 +19,8 @@ function jsonResponse(data: unknown, status = 200) {
 }
 
 function verifyAuth(req: Request): { userId: string } | null {
-  const authHeader = req.headers.get('authorization') || req.headers.get('Authorization')
+  const authHeader =
+    req.headers.get('authorization') || req.headers.get('Authorization')
   if (!authHeader?.startsWith('Bearer ')) return null
   try {
     const JWT_SECRET = Netlify.env.get('JWT_SECRET')!
@@ -56,7 +57,10 @@ export default async function handler(req: Request, context: Context) {
   // ========================
   if (pathname === '/api/pages' && req.method === 'GET') {
     try {
-      const userPages = await db.select().from(pages).where(eq(pages.userId, auth.userId))
+      const userPages = await db
+        .select()
+        .from(pages)
+        .where(eq(pages.userId, auth.userId))
       return jsonResponse({ pages: userPages })
     } catch (err) {
       console.error(err)
@@ -70,18 +74,26 @@ export default async function handler(req: Request, context: Context) {
   if (pathname === '/api/pages' && req.method === 'POST') {
     try {
       const { title, theme = 'minimal' } = await req.json()
-      if (!title?.trim()) return jsonResponse({ error: 'Title is required.' }, 400)
+      if (!title?.trim())
+        return jsonResponse({ error: 'Title is required.' }, 400)
 
       let slug = slugify(title)
-      const existing = await db.select({ slug: pages.slug }).from(pages).where(eq(pages.slug, slug)).limit(1)
+      const existing = await db
+        .select({ slug: pages.slug })
+        .from(pages)
+        .where(eq(pages.slug, slug))
+        .limit(1)
       if (existing.length > 0) slug = `${slug}-${nanoid(4)}`
 
-      const [page] = await db.insert(pages).values({
-        userId: auth.userId,
-        title: title.trim(),
-        slug,
-        theme,
-      }).returning()
+      const [page] = await db
+        .insert(pages)
+        .values({
+          userId: auth.userId,
+          title: title.trim(),
+          slug,
+          theme,
+        })
+        .returning()
 
       return jsonResponse({ page }, 201)
     } catch (err) {
@@ -103,7 +115,9 @@ export default async function handler(req: Request, context: Context) {
   // ========================
   if (!action && req.method === 'GET') {
     try {
-      const [page] = await db.select().from(pages)
+      const [page] = await db
+        .select()
+        .from(pages)
         .where(and(eq(pages.id, pageId), eq(pages.userId, auth.userId)))
         .limit(1)
       if (!page) return jsonResponse({ error: 'Page not found.' }, 404)
@@ -119,7 +133,15 @@ export default async function handler(req: Request, context: Context) {
   if (!action && req.method === 'PUT') {
     try {
       const body = await req.json()
-      const allowed = ['title', 'heroSection', 'featuresSection', 'gallerySection', 'contactSection', 'sectionOrder', 'theme']
+      const allowed = [
+        'title',
+        'heroSection',
+        'featuresSection',
+        'gallerySection',
+        'contactSection',
+        'sectionOrder',
+        'theme',
+      ]
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const updates: Record<string, any> = { updatedAt: new Date() }
 
@@ -128,15 +150,22 @@ export default async function handler(req: Request, context: Context) {
       }
 
       if (body.slug) {
-        const newSlug = body.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-').slice(0, 60)
-        const conflict = await db.select({ id: pages.id }).from(pages)
-          .where(eq(pages.slug, newSlug)).limit(1)
+        const newSlug = body.slug
+          .toLowerCase()
+          .replace(/[^a-z0-9-]/g, '-')
+          .slice(0, 60)
+        const conflict = await db
+          .select({ id: pages.id })
+          .from(pages)
+          .where(eq(pages.slug, newSlug))
+          .limit(1)
         if (!conflict[0] || conflict[0].id === pageId) {
           updates.slug = newSlug
         }
       }
 
-      const [updated] = await db.update(pages)
+      const [updated] = await db
+        .update(pages)
         .set(updates)
         .where(and(eq(pages.id, pageId), eq(pages.userId, auth.userId)))
         .returning()
@@ -154,8 +183,13 @@ export default async function handler(req: Request, context: Context) {
   // ========================
   if (action === 'publish' && req.method === 'POST') {
     try {
-      const [updated] = await db.update(pages)
-        .set({ status: 'published', publishedAt: new Date(), updatedAt: new Date() })
+      const [updated] = await db
+        .update(pages)
+        .set({
+          status: 'published',
+          publishedAt: new Date(),
+          updatedAt: new Date(),
+        })
         .where(and(eq(pages.id, pageId), eq(pages.userId, auth.userId)))
         .returning()
       if (!updated) return jsonResponse({ error: 'Page not found.' }, 404)
@@ -170,7 +204,8 @@ export default async function handler(req: Request, context: Context) {
   // ========================
   if (action === 'unpublish' && req.method === 'POST') {
     try {
-      const [updated] = await db.update(pages)
+      const [updated] = await db
+        .update(pages)
         .set({ status: 'draft', updatedAt: new Date() })
         .where(and(eq(pages.id, pageId), eq(pages.userId, auth.userId)))
         .returning()
@@ -186,27 +221,39 @@ export default async function handler(req: Request, context: Context) {
   // ========================
   if (action === 'duplicate' && req.method === 'POST') {
     try {
-      const [original] = await db.select().from(pages)
+      const [original] = await db
+        .select()
+        .from(pages)
         .where(and(eq(pages.id, pageId), eq(pages.userId, auth.userId)))
         .limit(1)
       if (!original) return jsonResponse({ error: 'Page not found.' }, 404)
 
       let slug = `${original.slug}-copy`
-      const existing = await db.select({ slug: pages.slug }).from(pages).where(eq(pages.slug, slug)).limit(1)
+      const existing = await db
+        .select({ slug: pages.slug })
+        .from(pages)
+        .where(eq(pages.slug, slug))
+        .limit(1)
       if (existing.length > 0) slug = `${original.slug}-${nanoid(4)}`
 
-      const [copy] = await db.insert(pages).values({
-        userId: auth.userId,
-        title: `${original.title} (Copy)`,
-        slug,
-        theme: original.theme,
-        status: 'draft',
-        heroSection: original.heroSection as Record<string, unknown>,
-        featuresSection: original.featuresSection as Record<string, unknown>[],
-        gallerySection: original.gallerySection as Record<string, unknown>[],
-        contactSection: original.contactSection as Record<string, unknown>,
-        sectionOrder: original.sectionOrder as string[],
-      }).returning()
+      const [copy] = await db
+        .insert(pages)
+        .values({
+          userId: auth.userId,
+          title: `${original.title} (Copy)`,
+          slug,
+          theme: original.theme,
+          status: 'draft',
+          heroSection: original.heroSection as Record<string, unknown>,
+          featuresSection: original.featuresSection as Record<
+            string,
+            unknown
+          >[],
+          gallerySection: original.gallerySection as Record<string, unknown>[],
+          contactSection: original.contactSection as Record<string, unknown>,
+          sectionOrder: original.sectionOrder as string[],
+        })
+        .returning()
 
       return jsonResponse({ page: copy }, 201)
     } catch (err) {

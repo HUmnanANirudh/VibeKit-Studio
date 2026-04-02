@@ -10,26 +10,27 @@ function getAuthToken() {
 // Fetchers
 async function fetchPages(): Promise<PageRenderData[]> {
   const token = getAuthToken()
-  if (!token) return [
-    {
-      id: 'mock-1',
-      title: 'Project Alpha',
-      slug: 'project-alpha',
-      status: 'published',
-      theme: 'neo-brutal',
-      viewCount: 124,
-      updatedAt: new Date().toISOString(),
-    },
-    {
-      id: 'mock-2',
-      title: 'Vibe Landing',
-      slug: 'vibe-landing',
-      status: 'draft',
-      theme: 'luxury',
-      viewCount: 0,
-      updatedAt: new Date().toISOString(),
-    }
-  ] as any[]
+  if (!token)
+    return [
+      {
+        id: 'mock-1',
+        title: 'Project Alpha',
+        slug: 'project-alpha',
+        status: 'published',
+        theme: 'neo-brutal',
+        viewCount: 124,
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'mock-2',
+        title: 'Vibe Landing',
+        slug: 'vibe-landing',
+        status: 'draft',
+        theme: 'luxury',
+        viewCount: 0,
+        updatedAt: new Date().toISOString(),
+      },
+    ] as any[]
 
   const res = await fetch('/api/pages', {
     headers: { Authorization: `Bearer ${token}` },
@@ -46,33 +47,46 @@ async function fetchPages(): Promise<PageRenderData[]> {
 
 async function fetchPage(id: string): Promise<PageRenderData> {
   const token = getAuthToken()
-  if (!token) return {
-    id: id,
-    title: 'VibeKit Project (Mock)',
-    slug: 'mock-page',
-    status: 'draft',
-    theme: 'minimal',
-    sectionOrder: ['hero', 'features', 'gallery', 'contact'],
-    heroSection: { 
-      title: 'VibeKit Studio', 
-      subtitle: 'Premium templates for modern brands.', 
-      buttonText: 'Get Started',
-      buttonUrl: '#features'
-    },
-    featuresSection: [
-      { title: 'Modular Design', description: 'Built with a scalable feature-based architecture.' },
-      { title: 'Type Safe', description: 'Full TypeScript coverage across the entire stack.' },
-      { title: 'High Performance', description: 'Optimized for TanStack Start and React 19.' }
-    ],
-    gallerySection: [
-      { url: 'https://picsum.photos/seed/vibe1/800/600', alt: 'Vibe 1' },
-      { url: 'https://picsum.photos/seed/vibe2/800/600', alt: 'Vibe 2' },
-      { url: 'https://picsum.photos/seed/vibe3/800/600', alt: 'Vibe 3' }
-    ],
-    contactSection: { heading: 'Get in Touch', subheading: 'Let us build your next big thing.' },
-    viewCount: 0,
-    updatedAt: new Date().toISOString(),
-  } as any as PageRenderData
+  if (!token)
+    return {
+      id: id,
+      title: 'VibeKit Project (Mock)',
+      slug: 'mock-page',
+      status: 'draft',
+      theme: 'minimal',
+      sectionOrder: ['hero', 'features', 'gallery', 'contact'],
+      heroSection: {
+        title: 'VibeKit Studio',
+        subtitle: 'Premium templates for modern brands.',
+        buttonText: 'Get Started',
+        buttonUrl: '#features',
+      },
+      featuresSection: [
+        {
+          title: 'Modular Design',
+          description: 'Built with a scalable feature-based architecture.',
+        },
+        {
+          title: 'Type Safe',
+          description: 'Full TypeScript coverage across the entire stack.',
+        },
+        {
+          title: 'High Performance',
+          description: 'Optimized for TanStack Start and React 19.',
+        },
+      ],
+      gallerySection: [
+        { url: 'https://picsum.photos/seed/vibe1/800/600', alt: 'Vibe 1' },
+        { url: 'https://picsum.photos/seed/vibe2/800/600', alt: 'Vibe 2' },
+        { url: 'https://picsum.photos/seed/vibe3/800/600', alt: 'Vibe 3' },
+      ],
+      contactSection: {
+        heading: 'Get in Touch',
+        subheading: 'Let us build your next big thing.',
+      },
+      viewCount: 0,
+      updatedAt: new Date().toISOString(),
+    } as any as PageRenderData
 
   const res = await fetch(`/api/pages/${id}`, {
     headers: { Authorization: `Bearer ${token}` },

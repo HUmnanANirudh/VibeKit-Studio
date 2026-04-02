@@ -98,7 +98,9 @@ export function EditorSidebar({
               value={page.slug}
               onChange={(e) =>
                 onUpdatePage({
-                  slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
+                  slug: e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9-]/g, '-'),
                 })
               }
             />

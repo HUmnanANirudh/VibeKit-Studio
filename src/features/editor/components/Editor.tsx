@@ -1,20 +1,24 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from '@tanstack/react-router'
-import { useSuspenseQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  useSuspenseQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
 import { pageQueryOptions } from '#/lib/queries'
 import { EditorSidebar } from './EditorSidebar'
 import { LivePreview, type Viewport } from './LivePreview'
 import { Button } from '#/components/ui/button'
-import { 
-  ChevronLeft, 
-  Monitor, 
-  Tablet, 
-  Smartphone, 
-  Rocket, 
-  Eye, 
-  CheckCircle2, 
+import {
+  ChevronLeft,
+  Monitor,
+  Tablet,
+  Smartphone,
+  Rocket,
+  Eye,
+  CheckCircle2,
   AlertCircle,
-  Loader2 
+  Loader2,
 } from 'lucide-react'
 import type { PageRenderData } from '#/types'
 
@@ -25,14 +29,18 @@ interface EditorProps {
 export function Editor({ id }: EditorProps) {
   const queryClient = useQueryClient()
   const { data: serverPage } = useSuspenseQuery(pageQueryOptions(id))
-  
+
   const [page, setPage] = useState<PageRenderData>(serverPage)
-  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+  const [saveState, setSaveState] = useState<
+    'idle' | 'saving' | 'saved' | 'error'
+  >('idle')
   const [viewport, setViewport] = useState<Viewport>('desktop')
   const [activeSection, setActiveSection] = useState('hero')
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null)
 
-  useEffect(() => { setPage(serverPage) }, [serverPage])
+  useEffect(() => {
+    setPage(serverPage)
+  }, [serverPage])
 
   const saveMutation = useMutation({
     mutationFn: async (data: PageRenderData) => {
@@ -43,9 +51,9 @@ export function Editor({ id }: EditorProps) {
       }
       const res = await fetch(`/api/pages/${id}`, {
         method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json', 
-          Authorization: `Bearer ${token}` 
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       })
@@ -67,7 +75,9 @@ export function Editor({ id }: EditorProps) {
         console.log('Mock publish:', publish)
         return { page: { ...page, status: publish ? 'published' : 'draft' } }
       }
-      const endpoint = publish ? `/api/pages/${id}/publish` : `/api/pages/${id}/unpublish`
+      const endpoint = publish
+        ? `/api/pages/${id}/publish`
+        : `/api/pages/${id}/unpublish`
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
@@ -75,7 +85,8 @@ export function Editor({ id }: EditorProps) {
       if (!res.ok) throw new Error('Publish failed')
       return res.json()
     },
-    onSuccess: (data) => queryClient.setQueryData(pageQueryOptions(id).queryKey, data.page),
+    onSuccess: (data) =>
+      queryClient.setQueryData(pageQueryOptions(id).queryKey, data.page),
   })
 
   const updatePage = (updates: Partial<PageRenderData>) => {
@@ -99,34 +110,100 @@ export function Editor({ id }: EditorProps) {
       <header className="h-14 border-b flex items-center justify-between px-4 bg-card shrink-0">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/app"><ChevronLeft className="h-4 w-4 mr-1" /> Dashboard</Link>
+            <Link to="/app">
+              <ChevronLeft className="h-4 w-4 mr-1" /> Dashboard
+            </Link>
           </Button>
           <div className="h-4 w-px bg-border" />
-          <span className="text-sm font-semibold truncate max-w-[200px]">{page.title}</span>
+          <span className="text-sm font-semibold truncate max-w-[200px]">
+            {page.title}
+          </span>
         </div>
 
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2 mr-4 text-xs font-medium">
-            {saveState === 'saving' && <><Loader2 className="h-3 w-3 animate-spin" /> Saving...</>}
-            {saveState === 'saved' && <><CheckCircle2 className="h-3 w-3 text-green-500" /> Saved</>}
-            {saveState === 'error' && <><AlertCircle className="h-3 w-3 text-destructive" /> Error</>}
+            {saveState === 'saving' && (
+              <>
+                <Loader2 className="h-3 w-3 animate-spin" /> Saving...
+              </>
+            )}
+            {saveState === 'saved' && (
+              <>
+                <CheckCircle2 className="h-3 w-3 text-green-500" /> Saved
+              </>
+            )}
+            {saveState === 'error' && (
+              <>
+                <AlertCircle className="h-3 w-3 text-destructive" /> Error
+              </>
+            )}
           </div>
 
           <div className="flex gap-1 bg-muted p-1 rounded-md">
-            <Button variant={viewport === 'desktop' ? 'secondary' : 'ghost'} size="icon" className="h-7 w-7" onClick={() => setViewport('desktop')}><Monitor className="h-4 w-4" /></Button>
-            <Button variant={viewport === 'tablet' ? 'secondary' : 'ghost'} size="icon" className="h-7 w-7" onClick={() => setViewport('tablet')}><Tablet className="h-4 w-4" /></Button>
-            <Button variant={viewport === 'mobile' ? 'secondary' : 'ghost'} size="icon" className="h-7 w-7" onClick={() => setViewport('mobile')}><Smartphone className="h-4 w-4" /></Button>
+            <Button
+              variant={viewport === 'desktop' ? 'secondary' : 'ghost'}
+              size="icon"
+              className="h-7 w-7"
+              onClick={() => setViewport('desktop')}
+            >
+              <Monitor className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewport === 'tablet' ? 'secondary' : 'ghost'}
+              size="icon"
+              className="h-7 w-7"
+              onClick={() => setViewport('tablet')}
+            >
+              <Tablet className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewport === 'mobile' ? 'secondary' : 'ghost'}
+              size="icon"
+              className="h-7 w-7"
+              onClick={() => setViewport('mobile')}
+            >
+              <Smartphone className="h-4 w-4" />
+            </Button>
           </div>
 
           <div className="mx-2 h-4 w-px bg-border" />
-          
-          {page.status === 'published' && <Button variant="outline" size="sm" asChild><a href={`/p/${page.slug}`} target="_blank" rel="noopener noreferrer"><Eye className="h-4 w-4 mr-2" /> View</a></Button>}
-          <Button size="sm" onClick={() => publishMutation.mutate(page.status !== 'published')} disabled={publishMutation.isPending}>{publishMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Rocket className="h-4 w-4 mr-2" />{page.status === 'published' ? 'Unpublish' : 'Publish'}</>}</Button>
+
+          {page.status === 'published' && (
+            <Button variant="outline" size="sm" asChild>
+              <a
+                href={`/p/${page.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Eye className="h-4 w-4 mr-2" /> View
+              </a>
+            </Button>
+          )}
+          <Button
+            size="sm"
+            onClick={() => publishMutation.mutate(page.status !== 'published')}
+            disabled={publishMutation.isPending}
+          >
+            {publishMutation.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                <Rocket className="h-4 w-4 mr-2" />
+                {page.status === 'published' ? 'Unpublish' : 'Publish'}
+              </>
+            )}
+          </Button>
         </div>
       </header>
 
       <div className="flex-1 flex overflow-hidden">
-        <EditorSidebar page={page} activeSection={activeSection} onUpdatePage={updatePage} onSetActiveSection={setActiveSection} onMoveSection={moveSection} />
+        <EditorSidebar
+          page={page}
+          activeSection={activeSection}
+          onUpdatePage={updatePage}
+          onSetActiveSection={setActiveSection}
+          onMoveSection={moveSection}
+        />
         <LivePreview page={page} viewport={viewport} />
       </div>
     </div>

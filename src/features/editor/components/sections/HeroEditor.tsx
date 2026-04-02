@@ -17,7 +17,9 @@ export function HeroEditor({ data, onChange }: HeroEditorProps) {
 
   return (
     <div className="grid gap-4">
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Hero Section</h3>
+      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+        Hero Section
+      </h3>
       {fields.map((f) => (
         <div key={f.key} className="grid gap-1.5">
           <Label htmlFor={`hero-${f.key}`}>{f.label}</Label>

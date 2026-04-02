@@ -10,7 +10,11 @@ interface GalleryEditorProps {
 }
 
 export function GalleryEditor({ data, onChange }: GalleryEditorProps) {
-  const updateImage = (index: number, field: keyof GalleryImage, value: string) => {
+  const updateImage = (
+    index: number,
+    field: keyof GalleryImage,
+    value: string,
+  ) => {
     const updated = [...data]
     updated[index] = { ...updated[index], [field]: value }
     onChange(updated)
@@ -41,18 +45,29 @@ export function GalleryEditor({ data, onChange }: GalleryEditorProps) {
 
       <div className="grid gap-4">
         {data.map((img, i) => (
-          <div key={i} className="group relative rounded-lg border bg-muted/30 p-4">
+          <div
+            key={i}
+            className="group relative rounded-lg border bg-muted/30 p-4"
+          >
             <div className="flex items-center gap-4 mb-4">
               <div className="flex h-16 w-24 shrink-0 items-center justify-center rounded border bg-background overflow-hidden relative group">
                 {img.url ? (
-                  <img src={img.url} alt={img.alt} className="h-full w-full object-cover" />
+                  <img
+                    src={img.url}
+                    alt={img.alt}
+                    className="h-full w-full object-cover"
+                  />
                 ) : (
                   <ImageIcon className="h-6 w-6 text-muted-foreground/40" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-muted-foreground uppercase">Image {i + 1}</p>
-                <p className="text-xs truncate text-muted-foreground/60">{img.url || 'No URL provided'}</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase">
+                  Image {i + 1}
+                </p>
+                <p className="text-xs truncate text-muted-foreground/60">
+                  {img.url || 'No URL provided'}
+                </p>
               </div>
               <Button
                 variant="ghost"

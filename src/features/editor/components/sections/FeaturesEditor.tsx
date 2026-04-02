@@ -10,7 +10,11 @@ interface FeaturesEditorProps {
 }
 
 export function FeaturesEditor({ data, onChange }: FeaturesEditorProps) {
-  const updateFeature = (index: number, field: keyof FeatureCard, value: string) => {
+  const updateFeature = (
+    index: number,
+    field: keyof FeatureCard,
+    value: string,
+  ) => {
     const updated = [...data]
     updated[index] = { ...updated[index], [field]: value }
     onChange(updated)
@@ -18,7 +22,10 @@ export function FeaturesEditor({ data, onChange }: FeaturesEditorProps) {
 
   const addFeature = () => {
     if (data.length >= 6) return
-    onChange([...data, { title: 'New Feature', description: 'Describe this feature.' }])
+    onChange([
+      ...data,
+      { title: 'New Feature', description: 'Describe this feature.' },
+    ])
   }
 
   const removeFeature = (index: number) => {
@@ -41,7 +48,10 @@ export function FeaturesEditor({ data, onChange }: FeaturesEditorProps) {
 
       <div className="grid gap-4">
         {data.map((feature, i) => (
-          <div key={i} className="group relative rounded-lg border bg-muted/30 p-4 pt-10">
+          <div
+            key={i}
+            className="group relative rounded-lg border bg-muted/30 p-4 pt-10"
+          >
             <Button
               variant="ghost"
               size="icon"
@@ -66,7 +76,9 @@ export function FeaturesEditor({ data, onChange }: FeaturesEditorProps) {
                 <Input
                   id={`feature-desc-${i}`}
                   value={feature.description}
-                  onChange={(e) => updateFeature(i, 'description', e.target.value)}
+                  onChange={(e) =>
+                    updateFeature(i, 'description', e.target.value)
+                  }
                 />
               </div>
             </div>

@@ -38,10 +38,13 @@ export default async function handler(req: Request, context: Context) {
   // ========================
   if (!action && req.method === 'GET') {
     try {
-      const [page] = await db.select().from(pages)
+      const [page] = await db
+        .select()
+        .from(pages)
         .where(and(eq(pages.slug, slug), eq(pages.status, 'published')))
         .limit(1)
-      if (!page) return jsonResponse({ error: 'Page not found or not published.' }, 404)
+      if (!page)
+        return jsonResponse({ error: 'Page not found or not published.' }, 404)
       return jsonResponse({ page })
     } catch (err) {
       console.error(err)
@@ -54,12 +57,15 @@ export default async function handler(req: Request, context: Context) {
   // ========================
   if (action === 'view' && req.method === 'POST') {
     try {
-      const [page] = await db.select({ id: pages.id }).from(pages)
+      const [page] = await db
+        .select({ id: pages.id })
+        .from(pages)
         .where(and(eq(pages.slug, slug), eq(pages.status, 'published')))
         .limit(1)
       if (!page) return jsonResponse({ error: 'Page not found.' }, 404)
 
-      await db.update(pages)
+      await db
+        .update(pages)
         .set({ viewCount: sql`${pages.viewCount} + 1` })
         .where(eq(pages.id, page.id))
 
@@ -83,12 +89,21 @@ export default async function handler(req: Request, context: Context) {
     try {
       const { name, email, message } = await req.json()
 
-      if (!name?.trim()) return jsonResponse({ error: 'Name is required.' }, 400)
-      if (!email?.trim() || !validateEmail(email)) return jsonResponse({ error: 'Valid email is required.' }, 400)
-      if (!message?.trim() || message.length < 5) return jsonResponse({ error: 'Message must be at least 5 characters.' }, 400)
-      if (message.length > 5000) return jsonResponse({ error: 'Message too long.' }, 400)
+      if (!name?.trim())
+        return jsonResponse({ error: 'Name is required.' }, 400)
+      if (!email?.trim() || !validateEmail(email))
+        return jsonResponse({ error: 'Valid email is required.' }, 400)
+      if (!message?.trim() || message.length < 5)
+        return jsonResponse(
+          { error: 'Message must be at least 5 characters.' },
+          400,
+        )
+      if (message.length > 5000)
+        return jsonResponse({ error: 'Message too long.' }, 400)
 
-      const [page] = await db.select({ id: pages.id }).from(pages)
+      const [page] = await db
+        .select({ id: pages.id })
+        .from(pages)
         .where(and(eq(pages.slug, slug), eq(pages.status, 'published')))
         .limit(1)
       if (!page) return jsonResponse({ error: 'Page not found.' }, 404)

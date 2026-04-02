@@ -3,7 +3,6 @@ name: tanstack-query
 description: Powerful asynchronous state management, server-state utilities, and data fetching for TS/JS, React, Vue, Solid, Svelte & Angular.
 ---
 
-
 ## Overview
 
 TanStack Query (formerly React Query) manages server state - data that lives on the server and needs to be fetched, cached, synchronized, and updated. It provides automatic caching, background refetching, stale-while-revalidate patterns, pagination, infinite scrolling, and optimistic updates out of the box.
@@ -62,7 +61,10 @@ useQuery({ queryKey: ['todos', { status, page }], queryFn: fetchTodos })
 
 // Hierarchical keys for invalidation
 useQuery({ queryKey: ['todos', todoId], queryFn: () => fetchTodo(todoId) })
-useQuery({ queryKey: ['todos', todoId, 'comments'], queryFn: () => fetchComments(todoId) })
+useQuery({
+  queryKey: ['todos', todoId, 'comments'],
+  queryFn: () => fetchComments(todoId),
+})
 
 // Invalidation matches prefixes:
 // queryClient.invalidateQueries({ queryKey: ['todos'] })
@@ -130,13 +132,13 @@ function Todos() {
   const {
     data,
     error,
-    isLoading,      // First load, no data yet
-    isFetching,     // Any fetch in progress (including background)
+    isLoading, // First load, no data yet
+    isFetching, // Any fetch in progress (including background)
     isError,
     isSuccess,
-    isPending,      // No data yet (same as isLoading in most cases)
-    status,         // 'pending' | 'error' | 'success'
-    fetchStatus,    // 'fetching' | 'paused' | 'idle'
+    isPending, // No data yet (same as isLoading in most cases)
+    status, // 'pending' | 'error' | 'success'
+    fetchStatus, // 'fetching' | 'paused' | 'idle'
     refetch,
     isStale,
     isPlaceholderData,
@@ -161,22 +163,22 @@ useQuery({
   queryFn: fetchTodos,
 
   // Freshness
-  staleTime: 5000,            // ms data stays fresh (default: 0)
-  gcTime: 300000,             // ms unused data stays in cache (default: 5 min)
+  staleTime: 5000, // ms data stays fresh (default: 0)
+  gcTime: 300000, // ms unused data stays in cache (default: 5 min)
 
   // Refetching
-  refetchInterval: 10000,     // Poll every 10s
+  refetchInterval: 10000, // Poll every 10s
   refetchIntervalInBackground: false, // Don't poll when tab hidden
-  refetchOnMount: true,       // Refetch on component mount if stale
+  refetchOnMount: true, // Refetch on component mount if stale
   refetchOnWindowFocus: true, // Refetch on window focus if stale
-  refetchOnReconnect: true,   // Refetch on network reconnect
+  refetchOnReconnect: true, // Refetch on network reconnect
 
   // Retry
-  retry: 3,                   // Number of retries (or function)
+  retry: 3, // Number of retries (or function)
   retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
 
   // Conditional
-  enabled: !!userId,          // Only run when truthy
+  enabled: !!userId, // Only run when truthy
 
   // Initial/placeholder data
   initialData: () => cachedData,
@@ -185,7 +187,7 @@ useQuery({
   placeholderData: initialTodos,
 
   // Transform
-  select: (data) => data.filter(todo => !todo.done),
+  select: (data) => data.filter((todo) => !todo.done),
 
   // Structural sharing (default: true)
   structuralSharing: true,
@@ -213,7 +215,7 @@ function AddTodo() {
       return fetch('/api/todos', {
         method: 'POST',
         body: JSON.stringify(newTodo),
-      }).then(res => res.json())
+      }).then((res) => res.json())
     },
     // Lifecycle callbacks
     onMutate: async (variables) => {
@@ -372,13 +374,17 @@ function InfiniteList() {
   return (
     <div>
       {data.pages.map((page) =>
-        page.items.map((item) => <Item key={item.id} item={item} />)
+        page.items.map((item) => <Item key={item.id} item={item} />),
       )}
       <button
         onClick={() => fetchNextPage()}
         disabled={!hasNextPage || isFetchingNextPage}
       >
-        {isFetchingNextPage ? 'Loading...' : hasNextPage ? 'Load More' : 'No more'}
+        {isFetchingNextPage
+          ? 'Loading...'
+          : hasNextPage
+            ? 'Load More'
+            : 'No more'}
       </button>
     </div>
   )
@@ -391,7 +397,10 @@ function InfiniteList() {
 // Multiple independent queries run in parallel automatically
 function Dashboard() {
   const usersQuery = useQuery({ queryKey: ['users'], queryFn: fetchUsers })
-  const projectsQuery = useQuery({ queryKey: ['projects'], queryFn: fetchProjects })
+  const projectsQuery = useQuery({
+    queryKey: ['projects'],
+    queryFn: fetchProjects,
+  })
 
   // Both fetch simultaneously
 }
@@ -404,8 +413,8 @@ function UserProjects({ userIds }) {
       queryFn: () => fetchUser(id),
     })),
     combine: (results) => ({
-      data: results.map(r => r.data),
-      pending: results.some(r => r.isPending),
+      data: results.map((r) => r.data),
+      pending: results.some((r) => r.isPending),
     }),
   })
 }
@@ -443,9 +452,11 @@ function PaginatedList() {
 
   return (
     <div style={{ opacity: isPlaceholderData ? 0.5 : 1 }}>
-      {data.items.map(item => <Item key={item.id} item={item} />)}
+      {data.items.map((item) => (
+        <Item key={item.id} item={item} />
+      ))}
       <button
-        onClick={() => setPage(p => p + 1)}
+        onClick={() => setPage((p) => p + 1)}
         disabled={isPlaceholderData || !data.hasMore}
       >
         Next
@@ -458,7 +469,10 @@ function PaginatedList() {
 ## Suspense Integration
 
 ```tsx
-import { useSuspenseQuery, useSuspenseInfiniteQuery } from '@tanstack/react-query'
+import {
+  useSuspenseQuery,
+  useSuspenseInfiniteQuery,
+} from '@tanstack/react-query'
 
 // Component will suspend until data is loaded
 function TodoList() {
@@ -467,7 +481,13 @@ function TodoList() {
     queryFn: fetchTodos,
   })
   // data is guaranteed to be defined here
-  return <ul>{data.map(todo => <li key={todo.id}>{todo.title}</li>)}</ul>
+  return (
+    <ul>
+      {data.map((todo) => (
+        <li key={todo.id}>{todo.title}</li>
+      ))}
+    </ul>
+  )
 }
 
 // Wrap with Suspense boundary
@@ -535,7 +555,11 @@ queryClient.prefetchInfiniteQuery({
 
 ```tsx
 // Server component or loader
-import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query'
 
 async function getServerSideProps() {
   const queryClient = new QueryClient()
@@ -647,17 +671,19 @@ function createWrapper() {
     },
   })
   return ({ children }) => (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   )
 }
 
 test('fetches todos', async () => {
-  const { result } = renderHook(() => useQuery({
-    queryKey: ['todos'],
-    queryFn: fetchTodos,
-  }), { wrapper: createWrapper() })
+  const { result } = renderHook(
+    () =>
+      useQuery({
+        queryKey: ['todos'],
+        queryFn: fetchTodos,
+      }),
+    { wrapper: createWrapper() },
+  )
 
   await waitFor(() => expect(result.current.isSuccess).toBe(true))
   expect(result.current.data).toEqual(expectedTodos)
@@ -671,7 +697,7 @@ test('renders todos', () => {
   render(
     <QueryClientProvider client={queryClient}>
       <TodoList />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   )
 
   expect(screen.getByText('Todo 1')).toBeInTheDocument()
@@ -703,7 +729,7 @@ const { data } = useQuery({
 const { data } = useQuery({
   queryKey: ['todos'],
   queryFn: fetchTodos,
-  select: (data): string[] => data.map(t => t.title),
+  select: (data): string[] => data.map((t) => t.title),
 })
 // data: string[] | undefined
 ```
