@@ -1,0 +1,42 @@
+[build]
+  command = "npm run build"
+  publish = ".output/public"
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+  targetPort = 3000
+
+# API redirects to Netlify Functions
+[[redirects]]
+  from = "/api/auth/*"
+  to = "/.netlify/functions/auth"
+  status = 200
+
+[[redirects]]
+  from = "/api/pages/*"
+  to = "/.netlify/functions/pages"
+  status = 200
+
+[[redirects]]
+  from = "/api/pages"
+  to = "/.netlify/functions/pages"
+  status = 200
+
+[[redirects]]
+  from = "/api/public/*"
+  to = "/.netlify/functions/public"
+  status = 200
+
+# SPA fallback — all deep links return index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[build.environment]
+  NODE_VERSION = "20"
