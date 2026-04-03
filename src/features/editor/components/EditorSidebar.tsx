@@ -117,27 +117,27 @@ export function EditorSidebar({
           </div>
         </div>
 
-        {activeSection === 'hero' && (
+        {activeSection === 'hero' && page.heroSection && (
           <HeroEditor
             data={page.heroSection}
             onChange={(updates) =>
-              onUpdatePage({ heroSection: { ...page.heroSection, ...updates } })
+              onUpdatePage({ heroSection: { ...page.heroSection!, ...updates } })
             }
           />
         )}
-        {activeSection === 'features' && (
+        {activeSection === 'features' && page.featuresSection && (
           <FeaturesEditor
             data={page.featuresSection}
             onChange={(data) => onUpdatePage({ featuresSection: data })}
           />
         )}
-        {activeSection === 'gallery' && (
+        {activeSection === 'gallery' && page.gallerySection && (
           <GalleryEditor
             data={page.gallerySection}
             onChange={(data) => onUpdatePage({ gallerySection: data })}
           />
         )}
-        {activeSection === 'contact' && (
+        {activeSection === 'contact' && page.contactSection && (
           <ContactEditor
             data={page.contactSection}
             onChange={(data) => onUpdatePage({ contactSection: data })}

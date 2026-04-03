@@ -97,19 +97,24 @@ export const updatePage = createServerFn({ method: 'POST' })
   )
   .handler(async ({ data }) => {
     const user = await requireAuth()
-    const db = getDb()
-
-    const [updated] = await db
-      .update(pages)
-      .set({
-        ...data.updates,
-        updatedAt: new Date(),
-      })
-      .where(and(eq(pages.id, data.id), eq(pages.userId, user.id)))
-      .returning()
-
-    return updated as unknown as PageRenderData
+    return await internalUpdatePage(data.id, user.id, data.updates)
   })
+
+// Internal update logic for modular re-use (AI Agent)
+export async function internalUpdatePage(id: string, userId: string, updates: any) {
+  const db = getDb()
+  const [updated] = await db
+    .update(pages)
+    .set({
+      ...updates,
+      updatedAt: new Date(),
+    })
+    .where(and(eq(pages.id, id), eq(pages.userId, userId)))
+    .returning()
+
+  if (!updated) throw new Error('Failed to update page')
+  return updated as unknown as PageRenderData
+}
 
 // 6. Duplicate page
 export const duplicatePage = createServerFn({ method: 'POST' })

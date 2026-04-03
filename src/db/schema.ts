@@ -34,6 +34,11 @@ export const pages = pgTable('pages', {
   theme: text('theme').notNull().default('minimal'), // one of 6 vibe presets
   status: text('status').notNull().default('draft'), // 'draft' | 'published'
 
+  // Dynamic content and Design System stored as JSONB for Puck editor
+  content: jsonb('content').default([]).notNull(),
+  themeTokens: jsonb('theme_tokens').default({}).notNull(),
+  interactions: jsonb('interactions').default({}).notNull(),
+
   // Page sections stored as JSONB
   heroSection: jsonb('hero_section').default({
     title: 'Welcome to My Site',

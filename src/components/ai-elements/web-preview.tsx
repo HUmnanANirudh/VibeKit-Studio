@@ -78,7 +78,7 @@ export const WebPreview = ({
     <WebPreviewContext.Provider value={contextValue}>
       <div
         className={cn(
-          'flex size-full flex-col rounded-lg border bg-card',
+          'flex size-full flex-col bg-card',
           className,
         )}
         {...props}
@@ -97,7 +97,7 @@ export const WebPreviewNavigation = ({
   ...props
 }: WebPreviewNavigationProps) => (
   <div
-    className={cn('flex items-center gap-1 border-b p-2', className)}
+    className={cn('flex items-center gap-1 border-b p-2 h-14', className)}
     {...props}
   >
     {children}
@@ -182,28 +182,30 @@ export const WebPreviewUrl = ({
   )
 }
 
-export type WebPreviewBodyProps = ComponentProps<'iframe'> & {
+export type WebPreviewBodyProps = ComponentProps<'div'> & {
   loading?: ReactNode
+  src?: string
 }
 
 export const WebPreviewBody = ({
   className,
   loading,
   src,
+  children,
   ...props
 }: WebPreviewBodyProps) => {
   const { url } = useWebPreview()
 
   return (
-    <div className="flex-1">
-      <iframe
-        className={cn('size-full', className)}
-        // oxlint-disable-next-line eslint-plugin-react(iframe-missing-sandbox)
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
-        src={(src ?? url) || undefined}
-        title="Preview"
-        {...props}
-      />
+    <div className="flex-1 relative overflow-hidden flex flex-col min-h-0 bg-[var(--bg)]" {...props}>
+      {children ? children : (
+        <iframe
+          className={cn('size-full absolute inset-0', className)}
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
+          src={(src ?? url) || undefined}
+          title="Preview"
+        />
+      )}
       {loading}
     </div>
   )

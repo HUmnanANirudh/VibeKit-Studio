@@ -30,17 +30,59 @@ export interface ContactSectionConfig {
   subheading: string
 }
 
+export interface ThemeTokens {
+  colors: {
+    background: string
+    surface: string
+    text: string
+    accent: string
+    primary?: string
+    secondary?: string
+    muted?: string
+    border?: string
+  }
+  typography: {
+    headingFont: string
+    bodyFont: string
+    scale: {
+      h1: string
+      h2: string
+      body: string
+    }
+    weights: string[]
+  }
+  spacing: {
+    section: string
+    element: string
+  }
+  radius: string
+  buttons: {
+    style: 'solid' | 'outline' | 'glow' | 'brutal'
+    padding: string
+    radius: string
+  }
+}
+
+export interface InteractionSettings {
+  hover: string
+  animations: string
+  accessibility: string
+}
+
 export interface PageRenderData {
   id: string
   title: string
   slug: string
-  theme: Theme
+  theme: Theme // The Vibe preset name
+  themeTokens: ThemeTokens
+  interactions: InteractionSettings
   status: PageStatus
-  heroSection: HeroSection
-  featuresSection: FeatureCard[]
-  gallerySection: GalleryImage[]
-  contactSection: ContactSectionConfig
+  heroSection?: HeroSection
+  featuresSection?: FeatureCard[]
+  gallerySection?: GalleryImage[]
+  contactSection?: ContactSectionConfig
   sectionOrder: string[]
+  content: any[] // Dynamic Puck blocks
   viewCount: number
   updatedAt?: string | Date
 }
@@ -96,25 +138,29 @@ export interface PuckData {
     props: Record<string, any>
   }>
   root: {
-    props: {
-      theme: Theme
-      title: string
-    }
+    props: RootProps
   }
 }
 
 export interface AssistantUpdate {
-  theme: Theme
-  title: string
+  theme: ThemeTokens
   blocks: Array<{
-    type: 'Hero' | 'Features' | 'Gallery' | 'Contact'
-    props: any
+    id: string
+    type: string
+    content: Record<string, any>
+    style: Record<string, any>
+    media?: {
+      type: string
+      prompt: string
+    }
   }>
+  interactions: InteractionSettings
 }
 
 export type RootProps = {
   theme: Theme
   title: string
+  themeTokens?: ThemeTokens
 }
 
 export interface EditorComponents {
