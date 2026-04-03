@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs'
 import {
   generateAccessToken,
   generateRefreshToken,
+  verifyToken,
 } from '../../../lib/auth'
 import { AuthRepository } from './auth.repository'
 
@@ -58,6 +59,31 @@ export class AuthService {
     }
   }
 
+  async logout(refreshToken: string) {
+    await this.repository.deleteSession(refreshToken)
+  }
+
+  async refreshTokens(oldRefreshToken: string) {
+    // 1. Verify token
+    const payload = await verifyToken(oldRefreshToken)
+    if (!payload) {
+      throw new Error('Invalid refresh token')
+    }
+
+    // 2. Check if session exists in DB
+    const session = await this.repository.getSessionByToken(oldRefreshToken)
+    if (!session || session.expiresAt < new Date()) {
+      if (session) await this.repository.deleteSession(oldRefreshToken)
+      throw new Error('Session expired or invalid')
+    }
+
+    // 3. Delete old session (Rotation)
+    await this.repository.deleteSession(oldRefreshToken)
+
+    // 4. Create new tokens and session
+    return await this.createTokensAndSession(session.userId, payload.email)
+  }
+
   private async createTokensAndSession(userId: string, email: string) {
     const accessToken = generateAccessToken({ userId, email })
     const refreshToken = generateRefreshToken(userId)
@@ -68,7 +94,7 @@ export class AuthService {
       new Date(Date.now() + SEVEN_DAYS_MS)
     )
 
-    return { accessToken, refreshToken }
+    return { accessToken, refreshToken, userId, email }
   }
 
   getSevenDaysMs() {

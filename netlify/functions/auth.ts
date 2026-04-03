@@ -13,6 +13,12 @@ export default async (req: Request, _context: any) => {
     if (path === '/api/auth/signup' || path.endsWith('/signup')) {
       return controller.handleSignup(req)
     }
+    if (path === '/api/auth/logout' || path.endsWith('/logout')) {
+      return controller.handleLogout(req)
+    }
+    if (path === '/api/auth/refresh' || path.endsWith('/refresh')) {
+      return controller.handleRefresh(req)
+    }
   }
 
   return new Response(JSON.stringify({ error: 'Not found' }), {
@@ -22,5 +28,5 @@ export default async (req: Request, _context: any) => {
 }
 
 export const config: any = {
-  path: ['/api/auth/login', '/api/auth/signup'],
+  path: ['/api/auth/login', '/api/auth/signup', '/api/auth/logout', '/api/auth/refresh'],
 }

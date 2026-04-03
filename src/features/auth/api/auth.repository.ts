@@ -29,4 +29,17 @@ export class AuthRepository {
       expiresAt,
     })
   }
+
+  async deleteSession(refreshToken: string) {
+    return await this.db.delete(sessions).where(eq(sessions.refreshToken, refreshToken))
+  }
+
+  async getSessionByToken(refreshToken: string) {
+    const [session] = await this.db
+      .select()
+      .from(sessions)
+      .where(eq(sessions.refreshToken, refreshToken))
+      .limit(1)
+    return session
+  }
 }

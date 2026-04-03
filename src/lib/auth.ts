@@ -34,7 +34,7 @@ export function getCookieHeader(name: string, value: string, maxAge: number) {
   return serialize(name, value, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict',
     path: '/',
     maxAge,
   })
@@ -44,7 +44,7 @@ export function getClearCookieHeader(name: string) {
   return serialize(name, '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict',
     path: '/',
     maxAge: -1,
   })

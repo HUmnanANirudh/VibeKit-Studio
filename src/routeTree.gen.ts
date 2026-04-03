@@ -17,6 +17,10 @@ import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as ApiVibeAssistantRouteImport } from './routes/api/vibe-assistant'
 import { Route as AppPagesIdRouteImport } from './routes/app/pages/$id'
+import { Route as ApiAuthSignupRouteImport } from './routes/api/auth/signup'
+import { Route as ApiAuthRefreshRouteImport } from './routes/api/auth/refresh'
+import { Route as ApiAuthLogoutRouteImport } from './routes/api/auth/logout'
+import { Route as ApiAuthLoginRouteImport } from './routes/api/auth/login'
 
 const AppRoute = AppRouteImport.update({
   id: '/app',
@@ -58,6 +62,26 @@ const AppPagesIdRoute = AppPagesIdRouteImport.update({
   path: '/pages/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const ApiAuthSignupRoute = ApiAuthSignupRouteImport.update({
+  id: '/api/auth/signup',
+  path: '/api/auth/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthRefreshRoute = ApiAuthRefreshRouteImport.update({
+  id: '/api/auth/refresh',
+  path: '/api/auth/refresh',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthLogoutRoute = ApiAuthLogoutRouteImport.update({
+  id: '/api/auth/logout',
+  path: '/api/auth/logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthLoginRoute = ApiAuthLoginRouteImport.update({
+  id: '/api/auth/login',
+  path: '/api/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -67,6 +91,10 @@ export interface FileRoutesByFullPath {
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
   '/app/': typeof AppIndexRoute
+  '/api/auth/login': typeof ApiAuthLoginRoute
+  '/api/auth/logout': typeof ApiAuthLogoutRoute
+  '/api/auth/refresh': typeof ApiAuthRefreshRoute
+  '/api/auth/signup': typeof ApiAuthSignupRoute
   '/app/pages/$id': typeof AppPagesIdRoute
 }
 export interface FileRoutesByTo {
@@ -76,6 +104,10 @@ export interface FileRoutesByTo {
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
   '/app': typeof AppIndexRoute
+  '/api/auth/login': typeof ApiAuthLoginRoute
+  '/api/auth/logout': typeof ApiAuthLogoutRoute
+  '/api/auth/refresh': typeof ApiAuthRefreshRoute
+  '/api/auth/signup': typeof ApiAuthSignupRoute
   '/app/pages/$id': typeof AppPagesIdRoute
 }
 export interface FileRoutesById {
@@ -87,6 +119,10 @@ export interface FileRoutesById {
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
   '/app/': typeof AppIndexRoute
+  '/api/auth/login': typeof ApiAuthLoginRoute
+  '/api/auth/logout': typeof ApiAuthLogoutRoute
+  '/api/auth/refresh': typeof ApiAuthRefreshRoute
+  '/api/auth/signup': typeof ApiAuthSignupRoute
   '/app/pages/$id': typeof AppPagesIdRoute
 }
 export interface FileRouteTypes {
@@ -99,6 +135,10 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/p/$slug'
     | '/app/'
+    | '/api/auth/login'
+    | '/api/auth/logout'
+    | '/api/auth/refresh'
+    | '/api/auth/signup'
     | '/app/pages/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -108,6 +148,10 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/p/$slug'
     | '/app'
+    | '/api/auth/login'
+    | '/api/auth/logout'
+    | '/api/auth/refresh'
+    | '/api/auth/signup'
     | '/app/pages/$id'
   id:
     | '__root__'
@@ -118,6 +162,10 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/p/$slug'
     | '/app/'
+    | '/api/auth/login'
+    | '/api/auth/logout'
+    | '/api/auth/refresh'
+    | '/api/auth/signup'
     | '/app/pages/$id'
   fileRoutesById: FileRoutesById
 }
@@ -128,6 +176,10 @@ export interface RootRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
   PSlugRoute: typeof PSlugRoute
+  ApiAuthLoginRoute: typeof ApiAuthLoginRoute
+  ApiAuthLogoutRoute: typeof ApiAuthLogoutRoute
+  ApiAuthRefreshRoute: typeof ApiAuthRefreshRoute
+  ApiAuthSignupRoute: typeof ApiAuthSignupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -188,6 +240,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPagesIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/api/auth/signup': {
+      id: '/api/auth/signup'
+      path: '/api/auth/signup'
+      fullPath: '/api/auth/signup'
+      preLoaderRoute: typeof ApiAuthSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/refresh': {
+      id: '/api/auth/refresh'
+      path: '/api/auth/refresh'
+      fullPath: '/api/auth/refresh'
+      preLoaderRoute: typeof ApiAuthRefreshRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/logout': {
+      id: '/api/auth/logout'
+      path: '/api/auth/logout'
+      fullPath: '/api/auth/logout'
+      preLoaderRoute: typeof ApiAuthLogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/login': {
+      id: '/api/auth/login'
+      path: '/api/auth/login'
+      fullPath: '/api/auth/login'
+      preLoaderRoute: typeof ApiAuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -210,6 +290,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
   PSlugRoute: PSlugRoute,
+  ApiAuthLoginRoute: ApiAuthLoginRoute,
+  ApiAuthLogoutRoute: ApiAuthLogoutRoute,
+  ApiAuthRefreshRoute: ApiAuthRefreshRoute,
+  ApiAuthSignupRoute: ApiAuthSignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

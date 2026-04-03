@@ -9,7 +9,7 @@ import {
   CardFooter,
 } from '#/components/ui/card'
 import { Loader2, AlertCircle } from 'lucide-react'
-
+import { Form } from '#/components/ui/form'
 import type { AuthFormProps } from '#/types'
 
 export function AuthForm({
@@ -22,6 +22,7 @@ export function AuthForm({
   onSubmit,
   children,
   footer,
+  form,
 }: AuthFormProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 animate-fade-in-up">
@@ -37,20 +38,42 @@ export function AuthForm({
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={onSubmit} className="space-y-4">
-            {error && (
-              <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm p-3 rounded-md flex items-center gap-2">
-                <AlertCircle className="h-4 w-4" /> {error}
-              </div>
-            )}
-            
-            {children}
-
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {loading ? loadingLabel : submitLabel}
-            </Button>
-          </form>
+          {error && (
+            <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm p-3 rounded-md flex items-center gap-2 mb-4">
+              <AlertCircle className="h-4 w-4" /> {error}
+            </div>
+          )}
+          
+          {form ? (
+            <Form {...form}>
+              <form 
+                onSubmit={form.handleSubmit(onSubmit)} 
+                className="space-y-4"
+                noValidate
+              >
+                {children}
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {loading ? loadingLabel : submitLabel}
+                </Button>
+              </form>
+            </Form>
+          ) : (
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault()
+                onSubmit(e)
+              }} 
+              className="space-y-4"
+              noValidate
+            >
+              {children}
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {loading ? loadingLabel : submitLabel}
+              </Button>
+            </form>
+          )}
         </CardContent>
         <CardFooter className="flex justify-center">
           {footer}

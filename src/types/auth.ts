@@ -1,4 +1,5 @@
-import type { ReactNode, SyntheticEvent } from 'react'
+import type { ReactNode } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
 
 export interface AuthFormProps {
   title: string
@@ -7,7 +8,8 @@ export interface AuthFormProps {
   loadingLabel: string
   loading: boolean
   error: string
-  onSubmit: (e: SyntheticEvent<HTMLFormElement>) => void
+  onSubmit: (data: any) => void
   children: ReactNode
   footer: ReactNode
+  form?: UseFormReturn<any>
 }
