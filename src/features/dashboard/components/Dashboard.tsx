@@ -109,7 +109,7 @@ export function Dashboard() {
           ))}
         </div>
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-8 flex items-center justify-between animate-fade-in-up" style={{ animationDelay: '400ms' }}>
           <h2 className="text-2xl font-bold tracking-tight">Your Pages</h2>
           <Button variant="outline" onClick={() => setShowNewModal(true)}>
             <Plus className="mr-2 h-4 w-4" /> Create
@@ -128,7 +128,7 @@ export function Dashboard() {
             </Button>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 animate-fade-in-up [animation-delay:0.2s] opacity-0 [animation-fill-mode:forwards]">
             {pages.map((page) => (
               <PageCard
                 key={page.id}

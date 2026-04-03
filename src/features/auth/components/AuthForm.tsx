@@ -34,7 +34,7 @@ export function AuthForm({
   footer,
 }: AuthFormProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 animate-fade-in-up">
       <Card className="w-full max-w-[400px] shadow-xl border-border/50">
         <CardHeader className="space-y-1 text-center">
           <Link

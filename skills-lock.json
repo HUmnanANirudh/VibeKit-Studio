@@ -26,6 +26,11 @@
       "sourceType": "github",
       "computedHash": "507f011a70e8b3ae242bdc0bb5b39fd91a1d4049a0f3c281991ccf84973d591c"
     },
+    "tailwindcss-animations": {
+      "source": "josiahsiegel/claude-plugin-marketplace",
+      "sourceType": "github",
+      "computedHash": "a3ff1c497a4c106d83f2342b30569257bbde3d12a40dde21b84ff693e3767bf0"
+    },
     "tanstack-db": {
       "source": "tanstack-skills/tanstack-skills",
       "sourceType": "github",

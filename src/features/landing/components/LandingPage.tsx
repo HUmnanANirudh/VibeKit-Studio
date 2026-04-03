@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button'
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-      <div className="text-center px-6 py-12 max-w-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground overflow-hidden">
+      <div className="text-center px-6 py-12 max-w-2xl animate-fade-in-up">
         <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-4 italic">
           VIBE<span className="text-primary italic">KIT</span> STUDIO
         </h1>
