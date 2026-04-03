@@ -1,134 +1,108 @@
-import type { Context, Config } from '@netlify/functions'
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import { neon } from '@neondatabase/serverless'
-import { drizzle } from 'drizzle-orm/neon-http'
-import { users } from '../../db/schema'
 import { eq } from 'drizzle-orm'
+import { getDb } from '../../src/db/index'
+import { users, sessions } from '../../src/db/schema'
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  getCookieHeader,
+} from '../../src/lib/auth'
 
-function getDb() {
-  const sql = neon(Netlify.env.get('DATABASE_URL')!)
-  return drizzle(sql)
-}
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 
-function jsonResponse(data: unknown, status = 200) {
+function jsonResponse(data: any, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      ...headers,
+    },
   })
 }
 
-export default async function handler(req: Request, context: Context) {
-  const path = new URL(req.url).pathname
+export default async (req: Request, _context: any) => {
+  const url = new URL(req.url)
+  const path = url.pathname
+  const db = getDb()
 
-  // ================================
-  // POST /api/auth/signup
-  // ================================
-  if (path.endsWith('/signup') && req.method === 'POST') {
+  // Handle Login
+  if (req.method === 'POST' && (path === '/api/auth/login' || path.endsWith('/login'))) {
     try {
-      const { name, email, password } = await req.json()
-      if (!name || !email || !password) {
-        return jsonResponse(
-          { error: 'Name, email, and password are required.' },
-          400,
-        )
-      }
-      if (password.length < 8) {
-        return jsonResponse(
-          { error: 'Password must be at least 8 characters.' },
-          400,
-        )
-      }
-
-      const db = getDb()
-      const existing = await db
+      const { email, password } = await req.json()
+      const [user] = await db
         .select()
         .from(users)
-        .where(eq(users.email, email.toLowerCase()))
+        .where(eq(users.email, email))
         .limit(1)
-      if (existing.length > 0) {
-        return jsonResponse({ error: 'Email already registered.' }, 400)
+
+      if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+        return jsonResponse({ error: 'Invalid credentials' }, 401)
       }
 
-      const passwordHash = await bcrypt.hash(password, 12)
-      const [user] = await db
-        .insert(users)
-        .values({
-          name: name.trim(),
-          email: email.toLowerCase().trim(),
-          passwordHash,
-        })
-        .returning()
+      const accessToken = generateAccessToken({
+        userId: user.id,
+        email: user.email,
+      })
+      const refreshToken = generateRefreshToken(user.id)
 
-      const JWT_SECRET = Netlify.env.get('JWT_SECRET')!
-      const token = jwt.sign(
-        { userId: user.id, email: user.email },
-        JWT_SECRET,
-        { expiresIn: '30d' },
-      )
+      await db.insert(sessions).values({
+        userId: user.id,
+        refreshToken,
+        expiresAt: new Date(Date.now() + SEVEN_DAYS_MS),
+      })
+
+      const cookie = getCookieHeader('refreshToken', refreshToken, SEVEN_DAYS_MS)
 
       return jsonResponse(
-        { token, user: { id: user.id, name: user.name, email: user.email } },
+        { user: { id: user.id, email: user.email, name: user.name }, accessToken },
+        200,
+        { 'Set-Cookie': cookie }
+      )
+    } catch (err) {
+      console.error('Login error:', err)
+      return jsonResponse({ error: 'Login failed' }, 500)
+    }
+  }
+
+  // Handle Signup
+  if (req.method === 'POST' && (path === '/api/auth/signup' || path.endsWith('/signup'))) {
+    try {
+      const { email, password, name } = await req.json()
+      const passwordHash = await bcrypt.hash(password, 10)
+
+      const [user] = await db
+        .insert(users)
+        .values({ email, passwordHash, name })
+        .returning()
+
+      const accessToken = generateAccessToken({
+        userId: user.id,
+        email: user.email,
+      })
+      const refreshToken = generateRefreshToken(user.id)
+
+      await db.insert(sessions).values({
+        userId: user.id,
+        refreshToken,
+        expiresAt: new Date(Date.now() + SEVEN_DAYS_MS),
+      })
+
+      const cookie = getCookieHeader('refreshToken', refreshToken, SEVEN_DAYS_MS)
+
+      return jsonResponse(
+        { user: { id: user.id, email: user.email, name: user.name }, accessToken },
         201,
+        { 'Set-Cookie': cookie }
       )
     } catch (err) {
       console.error('Signup error:', err)
-      return jsonResponse({ error: 'Internal server error.' }, 500)
+      return jsonResponse({ error: 'Signup failed' }, 500)
     }
   }
 
-  // ================================
-  // POST /api/auth/login
-  // ================================
-  if (path.endsWith('/login') && req.method === 'POST') {
-    try {
-      const { email, password } = await req.json()
-      if (!email || !password) {
-        return jsonResponse({ error: 'Email and password are required.' }, 400)
-      }
-
-      const db = getDb()
-      const [user] = await db
-        .select()
-        .from(users)
-        .where(eq(users.email, email.toLowerCase()))
-        .limit(1)
-      if (!user) {
-        return jsonResponse({ error: 'Invalid email or password.' }, 401)
-      }
-
-      const validPassword = await bcrypt.compare(password, user.passwordHash)
-      if (!validPassword) {
-        return jsonResponse({ error: 'Invalid email or password.' }, 401)
-      }
-
-      const JWT_SECRET = Netlify.env.get('JWT_SECRET')!
-      const token = jwt.sign(
-        { userId: user.id, email: user.email },
-        JWT_SECRET,
-        { expiresIn: '30d' },
-      )
-
-      return jsonResponse({
-        token,
-        user: { id: user.id, name: user.name, email: user.email },
-      })
-    } catch (err) {
-      console.error('Login error:', err)
-      return jsonResponse({ error: 'Internal server error.' }, 500)
-    }
-  }
-
-  // ================================
-  // POST /api/auth/logout
-  // ================================
-  if (path.endsWith('/logout') && req.method === 'POST') {
-    return jsonResponse({ message: 'Logged out.' })
-  }
-
-  return jsonResponse({ error: 'Not found.' }, 404)
+  return jsonResponse({ error: 'Not found' }, 404)
 }
 
-export const config: Config = {
-  path: ['/api/auth/signup', '/api/auth/login', '/api/auth/logout'],
+export const config: any = {
+  path: ['/api/auth/login', '/api/auth/signup'],
 }

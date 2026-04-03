@@ -142,6 +142,21 @@ export type Theme =
   | 'luxury'
   | 'retro'
 
+// ============================================
+// SESSIONS TABLE
+// Stores refresh tokens for persistent sessions
+// ============================================
+export const sessions = pgTable('sessions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  refreshToken: text('refresh_token').notNull().unique(),
+  userAgent: text('user_agent'),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
 export type PageStatus = 'draft' | 'published'
 
 export type HeroSection = {

@@ -1,13 +1,14 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { publicPageQueryOptions } from '#/lib/queries'
 import { generatePublishedPageHTML } from '#/lib/page-renderer'
+import type { PageRenderData } from '#/types'
 
 interface PublicPageProps {
   slug: string
 }
 
 export function PublicPage({ slug }: PublicPageProps) {
-  const { data: page } = useSuspenseQuery(publicPageQueryOptions(slug))
+  const { data: page } = useSuspenseQuery(publicPageQueryOptions(slug)) as { data: PageRenderData }
 
   if (!page) return null
 

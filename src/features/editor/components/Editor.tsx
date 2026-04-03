@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import { pageQueryOptions } from '#/lib/queries'
+import { updatePage, publishPage } from '#/lib/pages.functions'
 import { Button } from '#/components/ui/button'
 import {
   ChevronLeft,
@@ -15,7 +16,7 @@ import {
   Loader2,
   Sparkles,
 } from 'lucide-react'
-import type { PageRenderData } from '#/types'
+import type { PageRenderData as Page } from '#/types'
 import { Puck } from '@puckeditor/core'
 import '@puckeditor/core/puck.css'
 import { config } from '../lib/puck-config'
@@ -32,9 +33,9 @@ interface EditorProps {
 
 export function Editor({ id }: EditorProps) {
   const queryClient = useQueryClient()
-  const { data: serverPage } = useSuspenseQuery(pageQueryOptions(id))
+  const { data: serverPage } = useSuspenseQuery(pageQueryOptions(id)) as { data: Page }
 
-  const [page, setPage] = useState<PageRenderData>(serverPage)
+  const [page, setPage] = useState<Page>(serverPage)
   const [saveState, setSaveState] = useState<
     'idle' | 'saving' | 'saved' | 'error'
   >('idle')
@@ -47,51 +48,22 @@ export function Editor({ id }: EditorProps) {
 
   const puckData = useMemo(() => toPuckData(page), [page])
 
-  const saveMutation = useMutation({
-    mutationFn: async (data: PageRenderData) => {
-      const token = localStorage.getItem('vk-token')
-      if (!token) {
-        console.log('Mock save:', data)
-        return { page: data }
-      }
-      const res = await fetch(`/api/pages/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      })
-      if (!res.ok) throw new Error('Save failed')
-      return res.json()
-    },
+  const saveMutation = useMutation<Page, Error, Page>({
+    mutationFn: (data) => 
+      updatePage({ data: { id, updates: data } }),
     onSuccess: (data) => {
-      queryClient.setQueryData(pageQueryOptions(id).queryKey, data.page)
+      queryClient.setQueryData(pageQueryOptions(id).queryKey, data)
       setSaveState('saved')
       setTimeout(() => setSaveState('idle'), 2000)
     },
     onError: () => setSaveState('error'),
   })
 
-  const publishMutation = useMutation({
-    mutationFn: async (publish: boolean) => {
-      const token = localStorage.getItem('vk-token')
-      if (!token) {
-        console.log('Mock publish:', publish)
-        return { page: { ...page, status: publish ? 'published' : 'draft' } }
-      }
-      const endpoint = publish
-        ? `/api/pages/${id}/publish`
-        : `/api/pages/${id}/unpublish`
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (!res.ok) throw new Error('Publish failed')
-      return res.json()
-    },
+  const publishMutation = useMutation<Page, Error, boolean>({
+    mutationFn: (publish) => 
+      publishPage({ data: { id, publish } }),
     onSuccess: (data) =>
-      queryClient.setQueryData(pageQueryOptions(id).queryKey, data.page),
+      queryClient.setQueryData(pageQueryOptions(id).queryKey, data),
   })
 
   const handlePuckChange = (data: any) => {

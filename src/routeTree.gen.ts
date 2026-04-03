@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as PSlugRouteImport } from './routes/p/$slug'
@@ -17,15 +18,20 @@ import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as ApiVibeAssistantRouteImport } from './routes/api/vibe-assistant'
 import { Route as AppPagesIdRouteImport } from './routes/app/pages/$id'
 
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
-  id: '/app/',
-  path: '/app/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
 } as any)
 const PSlugRoute = PSlugRouteImport.update({
   id: '/p/$slug',
@@ -48,13 +54,14 @@ const ApiVibeAssistantRoute = ApiVibeAssistantRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppPagesIdRoute = AppPagesIdRouteImport.update({
-  id: '/app/pages/$id',
-  path: '/app/pages/$id',
-  getParentRoute: () => rootRouteImport,
+  id: '/pages/$id',
+  path: '/pages/$id',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/api/vibe-assistant': typeof ApiVibeAssistantRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/api/vibe-assistant': typeof ApiVibeAssistantRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
@@ -85,6 +93,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/app'
     | '/api/vibe-assistant'
     | '/auth/login'
     | '/auth/signup'
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/app'
     | '/api/vibe-assistant'
     | '/auth/login'
     | '/auth/signup'
@@ -113,16 +123,22 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
   ApiVibeAssistantRoute: typeof ApiVibeAssistantRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
   PSlugRoute: typeof PSlugRoute
-  AppIndexRoute: typeof AppIndexRoute
-  AppPagesIdRoute: typeof AppPagesIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -132,10 +148,10 @@ declare module '@tanstack/react-router' {
     }
     '/app/': {
       id: '/app/'
-      path: '/app'
+      path: '/'
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AppRoute
     }
     '/p/$slug': {
       id: '/p/$slug'
@@ -167,22 +183,33 @@ declare module '@tanstack/react-router' {
     }
     '/app/pages/$id': {
       id: '/app/pages/$id'
-      path: '/app/pages/$id'
+      path: '/pages/$id'
       fullPath: '/app/pages/$id'
       preLoaderRoute: typeof AppPagesIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppPagesIdRoute: typeof AppPagesIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppPagesIdRoute: AppPagesIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
   ApiVibeAssistantRoute: ApiVibeAssistantRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
   PSlugRoute: PSlugRoute,
-  AppIndexRoute: AppIndexRoute,
-  AppPagesIdRoute: AppPagesIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

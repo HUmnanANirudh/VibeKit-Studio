@@ -38,7 +38,7 @@ export function SignupForm() {
         setError(data.error || 'Signup failed')
         return
       }
-      if (data.token) localStorage.setItem('vk-token', data.token)
+      if (data.accessToken) localStorage.setItem('vk-token', data.accessToken)
       navigate({ to: '/app' })
     } catch {
       setError('Network error')

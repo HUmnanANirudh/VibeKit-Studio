@@ -1,4 +1,11 @@
-import type { PageRenderData, Theme } from '#/types'
+import type { 
+  PageRenderData, 
+  Theme, 
+  HeroSection, 
+  FeatureCard, 
+  GalleryImage, 
+  ContactSectionConfig 
+} from '#/types'
 
 export interface PuckData {
   content: Array<{
@@ -25,7 +32,7 @@ export function toPuckData(page: PageRenderData): PuckData {
         return { type: 'Contact', props: page.contactSection }
       return null
     })
-    .filter(Boolean) as PuckData['content']
+    .filter(Boolean) as any
 
   return {
     content,
@@ -53,34 +60,41 @@ export function fromPuckData(
     const type = block.type.toLowerCase()
     sectionOrder.push(type)
 
-    if (type === 'hero') page.heroSection = block.props as any
-    if (type === 'features') page.featuresSection = block.props.items || []
-    if (type === 'gallery') page.gallerySection = block.props.images || []
-    if (type === 'contact') page.contactSection = block.props as any
+    if (type === 'hero') page.heroSection = block.props as HeroSection
+    if (type === 'features') page.featuresSection = (block.props.items || []) as FeatureCard[]
+    if (type === 'gallery') page.gallerySection = (block.props.images || []) as GalleryImage[]
+    if (type === 'contact') page.contactSection = block.props as ContactSectionConfig
   }
 
   page.sectionOrder = sectionOrder
   return page
 }
 
+export interface AssistantUpdate {
+  theme: Theme
+  title: string
+  blocks: Array<{
+    type: 'Hero' | 'Features' | 'Gallery' | 'Contact'
+    props: any
+  }>
+}
+
 export function fromAssistantUpdate(
-  update: any,
+  update: AssistantUpdate,
   originalPage: PageRenderData,
 ): PageRenderData {
-  // Assistant update structure from tool call:
-  // { theme, title, blocks: Array<{ type, props }> }
   const page = { ...originalPage }
-  page.theme = update.theme
+  page.theme = update.theme as Theme
   page.title = update.title
 
   const sectionOrder: string[] = []
   for (const block of update.blocks) {
     const type = block.type.toLowerCase()
     sectionOrder.push(type)
-    if (type === 'hero') page.heroSection = block.props
-    if (type === 'features') page.featuresSection = block.props.items || []
-    if (type === 'gallery') page.gallerySection = block.props.images || []
-    if (type === 'contact') page.contactSection = block.props
+    if (type === 'hero') page.heroSection = block.props as HeroSection
+    if (type === 'features') page.featuresSection = (block.props.items || []) as FeatureCard[]
+    if (type === 'gallery') page.gallerySection = (block.props.images || []) as GalleryImage[]
+    if (type === 'contact') page.contactSection = block.props as ContactSectionConfig
   }
   page.sectionOrder = sectionOrder
   return page

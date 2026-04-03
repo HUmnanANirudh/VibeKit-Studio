@@ -27,10 +27,12 @@ const THEMES = [
   { value: 'retro', label: 'Retro', color: '#FFD700' },
 ]
 
+import type { Theme } from '#/types'
+
 interface NewPageModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onCreate: (title: string, theme: string) => void
+  onCreate: (title: string, theme: Theme) => void
   isPending: boolean
 }
 
@@ -41,7 +43,7 @@ export function NewPageModal({
   isPending,
 }: NewPageModalProps) {
   const [title, setTitle] = useState('')
-  const [theme, setTheme] = useState('minimal')
+  const [theme, setTheme] = useState<Theme>('minimal')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -74,7 +76,7 @@ export function NewPageModal({
               <Label htmlFor="theme">Choose a vibe</Label>
               <Select
                 value={theme}
-                onValueChange={setTheme}
+                onValueChange={(v) => setTheme(v as Theme)}
                 disabled={isPending}
               >
                 <SelectTrigger>

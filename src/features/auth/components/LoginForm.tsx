@@ -35,7 +35,6 @@ export function LoginForm() {
         setError(data.error || 'Login failed')
         return
       }
-      if (data.token) localStorage.setItem('vk-token', data.token)
       navigate({ to: '/app' })
     } catch {
       setError('Network error')

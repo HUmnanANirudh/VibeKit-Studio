@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, Link } from '@tanstack/react-router'
 import {
   useSuspenseQuery,
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
 import { pagesQueryOptions } from '#/lib/queries'
+import { createPage, duplicatePage } from '#/lib/pages.functions'
 import { PageCard } from './PageCard'
 import { NewPageModal } from './NewPageModal'
 import { Button } from '#/components/ui/button'
@@ -17,49 +18,25 @@ import {
   FileText,
   MousePointer2,
 } from 'lucide-react'
+import type { PageRenderData as Page, Theme } from '#/types'
 
 export function Dashboard() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { data: pages } = useSuspenseQuery(pagesQueryOptions)
+  const { data: pages = [] } = useSuspenseQuery(pagesQueryOptions) as { data: Page[] }
   const [showNewModal, setShowNewModal] = useState(false)
 
-  const createMutation = useMutation({
-    mutationFn: async ({ title, theme }: { title: string; theme: string }) => {
-      const token = localStorage.getItem('vk-token')
-      if (!token) {
-        console.log('Mock creation:', { title, theme })
-        return { page: { id: 'mock-' + Math.random().toString(36).slice(2) } }
-      }
-      const res = await fetch('/api/pages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title, theme }),
-      })
-      if (!res.ok) throw new Error('Failed to create page')
-      return res.json()
-    },
+  const createMutation = useMutation<Page, Error, { title: string; theme: Theme }>({
+    mutationFn: (data) => createPage({ data }),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: pagesQueryOptions.queryKey })
       setShowNewModal(false)
-      navigate({ to: '/app/pages/$id', params: { id: data.page.id } })
+      navigate({ to: '/app/pages/$id', params: { id: data.id } })
     },
   })
 
-  const duplicateMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const res = await fetch(`/api/pages/${id}/duplicate`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('vk-token')}`,
-        },
-      })
-      if (!res.ok) throw new Error('Failed to duplicate')
-      return res.json()
-    },
+  const duplicateMutation = useMutation<Page, Error, string>({
+    mutationFn: (id) => duplicatePage({ data: id }),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: pagesQueryOptions.queryKey }),
   })
@@ -67,9 +44,10 @@ export function Dashboard() {
   const logoutMutation = useMutation({
     mutationFn: async () => {
       await fetch('/api/auth/logout', { method: 'POST' })
-      localStorage.removeItem('vk-token')
     },
-    onSuccess: () => navigate({ to: '/auth/login' }),
+    onSuccess: () => {
+      window.location.href = '/auth/login'
+    },
   })
 
   const stats = [
@@ -179,13 +157,5 @@ export function Dashboard() {
         isPending={createMutation.isPending}
       />
     </div>
-  )
-}
-
-function Link({ to, children, ...props }: any) {
-  return (
-    <a href={to} {...props}>
-      {children}
-    </a>
   )
 }

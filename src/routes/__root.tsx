@@ -12,11 +12,22 @@ import appCss from '#/styles/styles.css?url'
 import themeCss from '#/styles/theme-tokens.css?url'
 import { TooltipProvider } from '#/components/ui/tooltip'
 
+import { getAuthUser } from '#/lib/auth.functions'
+
 interface MyRouterContext {
   queryClient: QueryClient
+  auth: {
+    user: { id: string; email: string; name: string } | null
+  }
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  beforeLoad: async () => {
+    const user = await getAuthUser()
+    return {
+      auth: { user },
+    }
+  },
   head: () => ({
     meta: [
       { charSet: 'utf-8' },

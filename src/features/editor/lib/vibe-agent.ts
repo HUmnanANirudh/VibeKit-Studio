@@ -27,7 +27,7 @@ export const updatePageTool = tool({
 })
 
 export const vibeAgent = new ToolLoopAgent({
-  model: openrouter('google/gemini-2.0-flash-001'),
+  model: openrouter('openrouter/auto'),
   instructions: `You are the Vibe Assistant for VibeKit Studio. 
   Your goal is to help users build beautiful mini-sites by generating and updating the page structure.
   
