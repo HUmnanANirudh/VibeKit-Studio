@@ -2,7 +2,6 @@ import { neon } from '@neondatabase/serverless'
 import { drizzle } from 'drizzle-orm/neon-http'
 import * as schema from './schema'
 
-// Fix for Netlify types in non-Netlify environments
 declare global {
   var Netlify: any
 }

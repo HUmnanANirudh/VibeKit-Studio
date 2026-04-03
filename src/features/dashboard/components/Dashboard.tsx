@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from '@tanstack/react-router'
+import { useAuthMutations } from '#/features/auth/hooks/useAuthMutations'
 import {
   useSuspenseQuery,
   useMutation,
@@ -23,6 +24,7 @@ import type { PageRenderData as Page, Theme } from '#/types'
 export function Dashboard() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { logoutMutation } = useAuthMutations()
   const { data: pages = [] } = useSuspenseQuery(pagesQueryOptions) as { data: Page[] }
   const [showNewModal, setShowNewModal] = useState(false)
 
@@ -41,14 +43,6 @@ export function Dashboard() {
       queryClient.invalidateQueries({ queryKey: pagesQueryOptions.queryKey }),
   })
 
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      await fetch('/api/auth/logout', { method: 'POST' })
-    },
-    onSuccess: () => {
-      window.location.href = '/auth/login'
-    },
-  })
 
   const stats = [
     { label: 'Total Pages', value: pages.length, icon: Layout },

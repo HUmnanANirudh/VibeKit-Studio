@@ -4,6 +4,8 @@
 
 [dev]
   command = "npm run dev"
+  targetPort = 3000
+  framework = "#custom"
 
 # API redirects to Netlify Functions
 [[redirects]]
