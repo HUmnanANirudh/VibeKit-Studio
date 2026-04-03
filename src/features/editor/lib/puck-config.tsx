@@ -1,21 +1,10 @@
 import type { Config } from '@puckeditor/core'
-import { Hero, type HeroProps } from '../components/blocks/Hero'
-import { Features, type FeaturesProps } from '../components/blocks/Features'
-import { Gallery, type GalleryProps } from '../components/blocks/Gallery'
-import { Contact, type ContactProps } from '../components/blocks/Contact'
-import type { Theme } from '#/types'
+import { Hero } from '../components/blocks/Hero'
+import { Features } from '../components/blocks/Features'
+import { Gallery } from '../components/blocks/Gallery'
+import { Contact } from '../components/blocks/Contact'
 
-export type RootProps = {
-  theme: Theme
-  title: string
-}
-
-type Components = {
-  Hero: HeroProps
-  Features: FeaturesProps
-  Gallery: GalleryProps
-  Contact: ContactProps
-}
+import type { RootProps, EditorComponents as Components } from '#/types'
 
 export const config: Config<Components, RootProps, 'layout' | 'content'> = {
   categories: {

@@ -1,11 +1,6 @@
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
-import type { ContactSectionConfig } from '#/types'
-
-interface ContactEditorProps {
-  data: ContactSectionConfig
-  onChange: (data: ContactSectionConfig) => void
-}
+import type { ContactEditorProps } from '#/types'
 
 export function ContactEditor({ data, onChange }: ContactEditorProps) {
   return (

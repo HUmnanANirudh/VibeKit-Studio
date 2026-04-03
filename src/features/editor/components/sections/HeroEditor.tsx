@@ -1,11 +1,6 @@
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
-import type { HeroSection } from '#/types'
-
-interface HeroEditorProps {
-  data: HeroSection
-  onChange: (updates: Partial<HeroSection>) => void
-}
+import type { HeroSection, HeroEditorProps } from '#/types'
 
 export function HeroEditor({ data, onChange }: HeroEditorProps) {
   const fields: { label: string; key: keyof HeroSection; type: string }[] = [

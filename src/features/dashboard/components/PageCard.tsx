@@ -3,7 +3,6 @@ import { Card, CardContent } from '#/components/ui/card'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
 import { ExternalLink, Copy, Edit, Loader2 } from 'lucide-react'
-import type { PageRenderData as Page } from '#/types'
 
 const THEMES: Record<string, { label: string; color: string }> = {
   minimal: { label: 'Minimal', color: '#18181B' },
@@ -14,11 +13,7 @@ const THEMES: Record<string, { label: string; color: string }> = {
   retro: { label: 'Retro', color: '#FFD700' },
 }
 
-interface PageCardProps {
-  page: Page
-  onDuplicate: (id: string) => void
-  isDuplicating: boolean
-}
+import type { PageCardProps } from '#/types'
 
 export function PageCard({ page, onDuplicate, isDuplicating }: PageCardProps) {
   return (

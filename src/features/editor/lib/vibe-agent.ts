@@ -1,7 +1,6 @@
 import { ToolLoopAgent, tool, type InferAgentUIMessage } from 'ai'
 import { openrouter } from '#/lib/ai/openrouter'
 import { z } from 'zod'
-
 export const updatePageTool = tool({
   description: 'Update the page structure with new content and theme.',
   inputSchema: z.object({

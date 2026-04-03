@@ -6,30 +6,22 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import { pageQueryOptions } from '#/lib/queries'
-import { updatePage, publishPage } from '#/lib/pages.functions'
+import { updatePage } from '#/lib/pages.functions'
 import { Button } from '#/components/ui/button'
 import {
   ChevronLeft,
-  Rocket,
   CheckCircle2,
   AlertCircle,
   Loader2,
-  Sparkles,
 } from 'lucide-react'
-import type { PageRenderData as Page } from '#/types'
+import type { PageRenderData as Page, EditorProps } from '#/types'
 import { Puck } from '@puckeditor/core'
 import '@puckeditor/core/puck.css'
 import { config } from '../lib/puck-config'
 import {
   toPuckData,
   fromPuckData,
-  fromAssistantUpdate,
 } from '../lib/puck-bridge'
-import { VibeAssistant } from './VibeAssistant'
-
-interface EditorProps {
-  id: string
-}
 
 export function Editor({ id }: EditorProps) {
   const queryClient = useQueryClient()
@@ -39,7 +31,6 @@ export function Editor({ id }: EditorProps) {
   const [saveState, setSaveState] = useState<
     'idle' | 'saving' | 'saved' | 'error'
   >('idle')
-  const [isAssistantOpen, setIsAssistantOpen] = useState(false)
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
@@ -59,12 +50,12 @@ export function Editor({ id }: EditorProps) {
     onError: () => setSaveState('error'),
   })
 
-  const publishMutation = useMutation<Page, Error, boolean>({
-    mutationFn: (publish) => 
-      publishPage({ data: { id, publish } }),
-    onSuccess: (data) =>
-      queryClient.setQueryData(pageQueryOptions(id).queryKey, data),
-  })
+  // const publishMutation = useMutation<Page, Error, boolean>({
+  //   mutationFn: (publish) => 
+  //     publishPage({ data: { id, publish } }),
+  //   onSuccess: (data) =>
+  //     queryClient.setQueryData(pageQueryOptions(id).queryKey, data),
+  // })
 
   const handlePuckChange = (data: any) => {
     const updated = fromPuckData(data, page)
@@ -75,11 +66,11 @@ export function Editor({ id }: EditorProps) {
     saveTimerRef.current = setTimeout(() => saveMutation.mutate(updated), 1500)
   }
 
-  const handleAssistantUpdate = (update: any) => {
-    const updated = fromAssistantUpdate(update, page)
-    setPage(updated)
-    saveMutation.mutate(updated)
-  }
+  // const handleAssistantUpdate = (update: any) => {
+  //   const updated = fromAssistantUpdate(update, page)
+  //   setPage(updated)
+  //   saveMutation.mutate(updated)
+  // }
 
   return (
     <div className="h-screen bg-background flex flex-col font-sans overflow-hidden">
@@ -96,19 +87,14 @@ export function Editor({ id }: EditorProps) {
         }}
         overrides={{
           header: ({ children }) => (
-            <header className="flex items-center justify-between w-full h-full px-4 bg-background">
-              <div className="flex items-center gap-4">
+            <header className='flex'>
+              <div className="flex items-center">
                 <Button variant="ghost" size="sm" asChild className="h-8">
                   <Link to="/app">
                     <ChevronLeft className="h-4 w-4 mr-1" /> Dashboard
                   </Link>
                 </Button>
-                <div className="h-4 w-px bg-border" />
-                <span className="text-sm font-semibold truncate max-w-[200px]">
-                  {page.title}
-                </span>
               </div>
-              <div className="flex-1" />
               {children}
             </header>
           ),
@@ -131,36 +117,6 @@ export function Editor({ id }: EditorProps) {
                   </>
                 )}
               </div>
-
-              <Button
-                variant={isAssistantOpen ? 'secondary' : 'outline'}
-                size="sm"
-                onClick={() => setIsAssistantOpen(!isAssistantOpen)}
-                className="h-8 gap-2 font-bold bg-primary/5 hover:bg-primary/10 border-primary/20 text-primary"
-              >
-                <Sparkles className="h-4 w-4" />
-                Vibe Assistant
-              </Button>
-
-              <div className="mx-2 h-4 w-px bg-border" />
-
-              <Button
-                size="sm"
-                className="h-8"
-                onClick={() =>
-                  publishMutation.mutate(page.status !== 'published')
-                }
-                disabled={publishMutation.isPending}
-              >
-                {publishMutation.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <>
-                    <Rocket className="h-4 w-4 mr-2" />
-                    {page.status === 'published' ? 'Unpublish' : 'Publish'}
-                  </>
-                )}
-              </Button>
               {children}
             </div>
           ),
@@ -170,15 +126,6 @@ export function Editor({ id }: EditorProps) {
           <div className="flex-1 flex flex-col min-w-0">
             <Puck.Layout />
           </div>
-
-          {isAssistantOpen && (
-            <div className="z-[100] absolute inset-y-0 right-0 lg:relative">
-              <VibeAssistant
-                onUpdatePage={handleAssistantUpdate}
-                onClose={() => setIsAssistantOpen(false)}
-              />
-            </div>
-          )}
         </div>
       </Puck>
     </div>

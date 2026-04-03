@@ -27,14 +27,7 @@ const THEMES = [
   { value: 'retro', label: 'Retro', color: '#FFD700' },
 ]
 
-import type { Theme } from '#/types'
-
-interface NewPageModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onCreate: (title: string, theme: Theme) => void
-  isPending: boolean
-}
+import type { NewPageModalProps, Theme } from '#/types'
 
 export function NewPageModal({
   open,

@@ -1,17 +1,10 @@
 import { generatePublishedPageHTML } from '#/lib/page-renderer'
-import type { PageRenderData } from '#/types'
+import type { LivePreviewProps } from '#/types'
 
-export type Viewport = 'desktop' | 'tablet' | 'mobile'
-
-const VIEWPORT_WIDTHS: Record<Viewport, string> = {
+const VIEWPORT_WIDTHS: Record<string, string> = {
   desktop: '100%',
   tablet: '768px',
   mobile: '375px',
-}
-
-interface LivePreviewProps {
-  page: PageRenderData
-  viewport: Viewport
 }
 
 export function LivePreview({ page, viewport }: LivePreviewProps) {

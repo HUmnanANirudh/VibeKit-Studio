@@ -4,7 +4,6 @@ import {
   Outlet,
   Scripts,
 } from '@tanstack/react-router'
-import type { QueryClient } from '@tanstack/react-query'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import * as React from 'react'
@@ -16,12 +15,7 @@ import { getAuthUser } from '#/lib/auth.functions'
 
 import { NotFound } from '#/components/NotFound'
 
-interface MyRouterContext {
-  queryClient: QueryClient
-  auth: {
-    user: { id: string; email: string; name: string } | null
-  }
-}
+import type { MyRouterContext } from '#/types'
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async () => {

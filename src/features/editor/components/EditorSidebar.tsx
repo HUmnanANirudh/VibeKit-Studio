@@ -13,7 +13,7 @@ import {
 } from '#/components/ui/select'
 import { Button } from '#/components/ui/button'
 import { ChevronUp, ChevronDown } from 'lucide-react'
-import type { PageRenderData, Theme } from '#/types'
+import type { EditorSidebarProps, Theme } from '#/types'
 
 const THEMES: Record<Theme, string> = {
   minimal: 'Minimal',
@@ -24,14 +24,6 @@ const THEMES: Record<Theme, string> = {
   retro: 'Retro',
 }
 
-interface EditorSidebarProps {
-  page: PageRenderData
-  activeSection: string
-  onUpdatePage: (updates: Partial<PageRenderData>) => void
-  onSetActiveSection: (section: string) => void
-  onMoveSection: (index: number, direction: 'up' | 'down') => void
-}
-
 export function EditorSidebar({
   page,
   activeSection,
@@ -40,7 +32,7 @@ export function EditorSidebar({
   onMoveSection,
 }: EditorSidebarProps) {
   return (
-    <aside className="w-[340px] border-r bg-card flex flex-col h-full">
+    <aside className="bg-card flex flex-col h-full">
       <div className="flex flex-col border-b p-2 gap-1">
         {page.sectionOrder.map((section, index) => (
           <div
@@ -57,7 +49,7 @@ export function EditorSidebar({
             >
               {section.charAt(0).toUpperCase() + section.slice(1)}
             </button>
-            <div className="flex flex-col pr-1">
+            <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="icon"

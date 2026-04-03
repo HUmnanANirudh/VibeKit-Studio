@@ -2,12 +2,7 @@ import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Trash2, Plus, Image as ImageIcon } from 'lucide-react'
-import type { GalleryImage } from '#/types'
-
-interface GalleryEditorProps {
-  data: GalleryImage[]
-  onChange: (data: GalleryImage[]) => void
-}
+import type { GalleryImage, GalleryEditorProps } from '#/types'
 
 export function GalleryEditor({ data, onChange }: GalleryEditorProps) {
   const updateImage = (
@@ -44,17 +39,17 @@ export function GalleryEditor({ data, onChange }: GalleryEditorProps) {
       </div>
 
       <div className="grid gap-4">
-        {data.map((img, i) => (
+        {data.map((image, i) => (
           <div
-            key={i}
+            key={`${image.url || image.alt}-${i}`}
             className="group relative rounded-lg border bg-muted/30 p-4"
           >
             <div className="flex items-center gap-4 mb-4">
               <div className="flex h-16 w-24 shrink-0 items-center justify-center rounded border bg-background overflow-hidden relative group">
-                {img.url ? (
+                {image.url ? (
                   <img
-                    src={img.url}
-                    alt={img.alt}
+                    src={image.url}
+                    alt={image.alt}
                     className="h-full w-full object-cover"
                   />
                 ) : (
@@ -66,7 +61,7 @@ export function GalleryEditor({ data, onChange }: GalleryEditorProps) {
                   Image {i + 1}
                 </p>
                 <p className="text-xs truncate text-muted-foreground/60">
-                  {img.url || 'No URL provided'}
+                  {image.url || 'No URL provided'}
                 </p>
               </div>
               <Button
@@ -87,7 +82,7 @@ export function GalleryEditor({ data, onChange }: GalleryEditorProps) {
                   id={`img-url-${i}`}
                   type="url"
                   placeholder="https://..."
-                  value={img.url}
+                  value={image.url}
                   onChange={(e) => updateImage(i, 'url', e.target.value)}
                 />
               </div>
@@ -95,7 +90,7 @@ export function GalleryEditor({ data, onChange }: GalleryEditorProps) {
                 <Label htmlFor={`img-alt-${i}`}>Alt Text</Label>
                 <Input
                   id={`img-alt-${i}`}
-                  value={img.alt}
+                  value={image.alt}
                   onChange={(e) => updateImage(i, 'alt', e.target.value)}
                   placeholder="Describe your image"
                 />

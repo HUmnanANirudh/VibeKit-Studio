@@ -10,17 +10,7 @@ import {
 } from '#/components/ui/card'
 import { Loader2, AlertCircle } from 'lucide-react'
 
-interface AuthFormProps {
-  title: string
-  description: string
-  submitLabel: string
-  loadingLabel: string
-  loading: boolean
-  error: string
-  onSubmit: (e: React.SyntheticEvent<HTMLFormElement>) => void
-  children: React.ReactNode
-  footer: React.ReactNode
-}
+import type { AuthFormProps } from '#/types'
 
 export function AuthForm({
   title,

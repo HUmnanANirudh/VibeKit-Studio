@@ -1,9 +1,5 @@
-import type { HeroSection } from '#/types'
+import type { HeroProps } from '#/types'
 import { cn } from '#/lib/utils'
-
-export interface HeroProps extends HeroSection {
-  className?: string
-}
 
 export function Hero({
   title,

@@ -2,12 +2,7 @@ import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Trash2, Plus } from 'lucide-react'
-import type { FeatureCard } from '#/types'
-
-interface FeaturesEditorProps {
-  data: FeatureCard[]
-  onChange: (data: FeatureCard[]) => void
-}
+import type { FeatureCard, FeaturesEditorProps } from '#/types'
 
 export function FeaturesEditor({ data, onChange }: FeaturesEditorProps) {
   const updateFeature = (
@@ -49,7 +44,7 @@ export function FeaturesEditor({ data, onChange }: FeaturesEditorProps) {
       <div className="grid gap-4">
         {data.map((feature, i) => (
           <div
-            key={i}
+            key={`${feature.title}-${i}`}
             className="group relative rounded-lg border bg-muted/30 p-4 pt-10"
           >
             <Button

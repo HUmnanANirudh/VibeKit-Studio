@@ -4,32 +4,21 @@ import type {
   HeroSection, 
   FeatureCard, 
   GalleryImage, 
-  ContactSectionConfig 
+  ContactSectionConfig,
+  PuckData,
+  AssistantUpdate
 } from '#/types'
-
-export interface PuckData {
-  content: Array<{
-    type: string
-    props: Record<string, any>
-  }>
-  root: {
-    props: {
-      theme: Theme
-      title: string
-    }
-  }
-}
 
 export function toPuckData(page: PageRenderData): PuckData {
   const content = page.sectionOrder
     .map((type) => {
-      if (type === 'hero') return { type: 'Hero', props: page.heroSection }
+      if (type === 'hero') return { type: 'Hero', props: { ...page.heroSection, id: 'hero' } }
       if (type === 'features')
-        return { type: 'Features', props: { items: page.featuresSection } }
+        return { type: 'Features', props: { items: page.featuresSection, id: 'features' } }
       if (type === 'gallery')
-        return { type: 'Gallery', props: { images: page.gallerySection } }
+        return { type: 'Gallery', props: { images: page.gallerySection, id: 'gallery' } }
       if (type === 'contact')
-        return { type: 'Contact', props: page.contactSection }
+        return { type: 'Contact', props: { ...page.contactSection, id: 'contact' } }
       return null
     })
     .filter(Boolean) as any
@@ -68,15 +57,6 @@ export function fromPuckData(
 
   page.sectionOrder = sectionOrder
   return page
-}
-
-export interface AssistantUpdate {
-  theme: Theme
-  title: string
-  blocks: Array<{
-    type: 'Hero' | 'Features' | 'Gallery' | 'Contact'
-    props: any
-  }>
 }
 
 export function fromAssistantUpdate(

@@ -1,10 +1,5 @@
-import type { GalleryImage } from '#/types'
+import type { GalleryProps } from '#/types'
 import { cn } from '#/lib/utils'
-
-export interface GalleryProps {
-  images: GalleryImage[]
-  className?: string
-}
 
 export function Gallery({ images, className }: GalleryProps) {
   return (
@@ -16,7 +11,7 @@ export function Gallery({ images, className }: GalleryProps) {
             .filter((i) => i.url)
             .map((img, i) => (
               <div
-                key={i}
+                key={`${img.url || img.alt}-${i}`}
                 className="aspect-video overflow-hidden rounded-xl border bg-background shadow-sm hover:shadow-md transition-shadow"
               >
                 <img
