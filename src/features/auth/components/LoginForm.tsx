@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
@@ -14,7 +14,7 @@ import {
 import { Loader2, AlertCircle } from 'lucide-react'
 
 export function LoginForm() {
-  const navigate = useNavigate()
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -35,8 +35,13 @@ export function LoginForm() {
         setError(data.error || 'Login failed')
         return
       }
-      navigate({ to: '/app' })
-    } catch {
+      
+      // Invalidate the router to refresh the auth context
+      await router.invalidate()
+      
+      // Force a full refresh to ensure auth state is picked up
+      window.location.href = '/app'
+    } catch (err) {
       setError('Network error')
     } finally {
       setLoading(false)

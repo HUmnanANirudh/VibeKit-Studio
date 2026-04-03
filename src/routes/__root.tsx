@@ -41,6 +41,22 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   }),
   component: RootLayout,
   shellComponent: RootDocument,
+  notFoundComponent: () => (
+    <div className="flex flex-col items-center justify-center min-h-[400px] text-center px-4">
+      <h1 className="text-4xl font-bold mb-4 italic italic tracking-tighter">
+        VIBE<span className="text-primary">KIT</span> 404
+      </h1>
+      <p className="text-muted-foreground mb-6 max-w-md">
+        Oops! Whatever vibe you're looking for, it's not at this URL.
+      </p>
+      <a
+        href="/"
+        className="text-primary font-semibold hover:underline"
+      >
+        Go back home
+      </a>
+    </div>
+  ),
 })
 
 function RootLayout() {

@@ -1,7 +1,11 @@
 import jwt from 'jsonwebtoken'
 import { serialize, parse } from 'cookie'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-me'
+declare global {
+  var Netlify: any
+}
+
+const JWT_SECRET = process.env.JWT_SECRET || 'vibekit-dev-default-secret-secure-123'
 const ACCESS_TOKEN_EXPIRY = '15m'
 const REFRESH_TOKEN_EXPIRY = '7d'
 

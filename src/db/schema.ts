@@ -74,7 +74,7 @@ export const pages = pgTable('pages', {
 
   contactSection: jsonb('contact_section').default({
     heading: 'Get In Touch',
-    subheading: "We'd love to hear from you.",
+    subheading: 'We would love to hear from you.',
   }),
 
   // Section order (array of section names)
@@ -118,7 +118,7 @@ export const contactSubmissions = pgTable('contact_submissions', {
   email: text('email').notNull(),
   message: text('message').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
-  read: boolean('read').notNull().default(false),
+  isRead: boolean('is_read').notNull().default(false),
 })
 
 // ============================================

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
@@ -14,7 +14,7 @@ import {
 import { Loader2, AlertCircle } from 'lucide-react'
 
 export function SignupForm() {
-  const navigate = useNavigate()
+  const router = useRouter()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -38,8 +38,12 @@ export function SignupForm() {
         setError(data.error || 'Signup failed')
         return
       }
-      if (data.accessToken) localStorage.setItem('vk-token', data.accessToken)
-      navigate({ to: '/app' })
+
+      // Invalidate the router to refresh the auth context
+      await router.invalidate()
+
+      // Force a full refresh to ensure auth state is picked up
+      window.location.href = '/app'
     } catch {
       setError('Network error')
     } finally {

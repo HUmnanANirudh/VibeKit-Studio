@@ -94,7 +94,14 @@ export default async (req: Request, _context: any) => {
         201,
         { 'Set-Cookie': cookie }
       )
-    } catch (err) {
+    } catch (err: any) {
+      const errorMsg = err.message || ''
+      const errorCode = err.code || err.cause?.code || ''
+      
+      if (errorCode === '23505' || errorMsg.includes('unique constraint') || errorMsg.includes('already exists')) {
+        return jsonResponse({ error: 'User already exists' }, 400)
+      }
+      
       console.error('Signup error:', err)
       return jsonResponse({ error: 'Signup failed' }, 500)
     }
