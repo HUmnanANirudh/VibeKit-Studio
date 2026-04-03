@@ -4,7 +4,7 @@ import {
   Outlet,
   Scripts,
 } from '@tanstack/react-router'
-import { QueryClient } from '@tanstack/react-query'
+import type { QueryClient } from '@tanstack/react-query'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import * as React from 'react'
@@ -42,8 +42,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootLayout,
   shellComponent: RootDocument,
   notFoundComponent: () => (
-    <div className="flex flex-col items-center justify-center min-h-[400px] text-center px-4">
-      <h1 className="text-4xl font-bold mb-4 italic italic tracking-tighter">
+    <div className="flex flex-col items-center justify-center min-h-100 text-center px-4">
+      <h1 className="text-4xl font-bold mb-4 italic tracking-tighter">
         VIBE<span className="text-primary">KIT</span> 404
       </h1>
       <p className="text-muted-foreground mb-6 max-w-md">
