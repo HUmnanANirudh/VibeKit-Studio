@@ -1,15 +1,6 @@
 import { getCookieHeader } from '../../../lib/auth'
+import { jsonResponse } from '../../../lib/utils'
 import { AuthService } from './auth.service'
-
-function jsonResponse(data: any, status = 200, headers = {}) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers,
-    },
-  })
-}
 
 export class AuthController {
   private service = new AuthService()
