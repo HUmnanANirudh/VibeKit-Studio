@@ -5,7 +5,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
-import { ChevronLeft, Loader2, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
+import { ChevronLeft, Loader2, Monitor, PanelLeftClose, PanelLeftOpen, Smartphone, Tablet } from 'lucide-react'
 
 import { pageQueryOptions } from '#/lib/queries'
 import { updatePage } from '#/lib/pages.functions'
@@ -35,6 +35,7 @@ export function Editor({ id }: EditorProps) {
     'idle' | 'saving' | 'saved' | 'error'
   >('idle')
   const [isAIPanelCollapsed, setIsAIPanelCollapsed] = useState(false)
+  const [viewport, setViewport] = useState<'desktop' | 'tablet' | 'mobile'>('desktop')
   const aiPanelRef = useRef<PanelImperativeHandle>(null)
 
   useEffect(() => {
@@ -183,20 +184,60 @@ export function Editor({ id }: EditorProps) {
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={400}>
-            <div className="relative size-full bg-muted/20 p-8 pt-4">
-              <div
-                className="pointer-events-none absolute inset-0 opacity-[0.03]"
-                style={{
-                  backgroundImage: 'radial-gradient(#000 1px, transparent 0)',
-                  backgroundSize: '40px 40px',
-                }}
-              />
-              <div className="flex size-full flex-col shadow-2xl">
-                <iframe
-                  srcDoc={generatePublishedPageHTML(page)}
-                  className="size-full border-none"
-                  title="Live Preview"
+            <div className="relative flex size-full flex-col bg-muted/20">
+              <div className="flex h-12 shrink-0 items-center justify-center gap-2 border-b bg-background/50 px-4 backdrop-blur-sm">
+                <Button
+                  variant={viewport === 'desktop' ? 'secondary' : 'ghost'}
+                  size="sm"
+                  className="h-8 gap-2 rounded-lg px-3 text-[10px] font-bold uppercase tracking-wider"
+                  onClick={() => setViewport('desktop')}
+                >
+                  <Monitor className="size-3" /> Desktop
+                </Button>
+                <Button
+                  variant={viewport === 'tablet' ? 'secondary' : 'ghost'}
+                  size="sm"
+                  className="h-8 gap-2 rounded-lg px-3 text-[10px] font-bold uppercase tracking-wider"
+                  onClick={() => setViewport('tablet')}
+                >
+                  <Tablet className="size-3" /> Tablet
+                </Button>
+                <Button
+                  variant={viewport === 'mobile' ? 'secondary' : 'ghost'}
+                  size="sm"
+                  className="h-8 gap-2 rounded-lg px-3 text-[10px] font-bold uppercase tracking-wider"
+                  onClick={() => setViewport('mobile')}
+                >
+                  <Smartphone className="size-3" /> Mobile
+                </Button>
+              </div>
+
+              <div className="relative flex-1 overflow-auto p-8 pt-6">
+                <div
+                  className="pointer-events-none absolute inset-0 opacity-[0.03]"
+                  style={{
+                    backgroundImage: 'radial-gradient(#000 1px, transparent 0)',
+                    backgroundSize: '40px 40px',
+                  }}
                 />
+                <div 
+                  className={cn(
+                    "mx-auto h-full overflow-hidden shadow-2xl transition-all duration-500 ease-in-out",
+                    viewport === 'desktop' && "w-full",
+                    viewport === 'tablet' && "w-[768px]",
+                    viewport === 'mobile' && "w-[375px]"
+                  )}
+                  style={{
+                    borderRadius: viewport === 'desktop' ? '0' : '24px',
+                    border: viewport === 'desktop' ? 'none' : '8px solid #1a1a1a',
+                  }}
+                >
+                  <iframe
+                    srcDoc={generatePublishedPageHTML(page)}
+                    className="size-full border-none bg-white"
+                    title="Live Preview"
+                  />
+                </div>
               </div>
             </div>
           </ResizablePanel>
