@@ -3,18 +3,19 @@ import { z } from 'zod'
 import { defaultModel } from '#/lib/ai/openrouter'
 
 const BlockSchema: any = z.lazy(() => z.object({
-  type: z.string().describe('The name of the component (e.g., Section, Flex, Text, Button)'),
-  props: z.record(z.string(), z.any()).describe('The React props for this component'),
-  children: z.array(BlockSchema).optional().describe('Nested child blocks for layout components like Section or Flex'),
-}));
+  type: z.string().describe('The name of the component (e.g., Section, Flex, Text, Button). MUST be an object with this field, NOT a string.'),
+  props: z.record(z.string(), z.any()).describe('The React props for this component. Example: { className: "p-4", content: "Hello" }'),
+  children: z.array(BlockSchema).optional().describe('Nested child blocks for layout components like Section or Flex.'),
+}).describe('A recursive block object. NEVER return a string here.'));
 
 export const vibeSystemPrompt = `You are the VibeKit AI Engine, a high-performance website architect.
 
-### CORE DIRECTIVE
-You do NOT just chat. You BUILD. For EVERY user request involving page creation or styling, you MUST call \`updatePage\`.
+### CORE DIRECTIVES
+1. **CONVERSE FIRST**: If the user's request is vague (e.g., "hi", "make me a website"), do NOT build yet. Ask 1-2 sharp, professional questions about their brand, audience, or desired vibe. 
+2. **STRICT SCHEMA**: When you call \`updatePage\`, every element in the \`content\` array MUST be a full object with \`type\` and \`props\`. NEVER just send a string like "Flex".
+3. **THEME TOKENS**: \`themeTokens\` MUST be an object (record), even if it only contains an archetype name. Example: { archetype: "MINIMAL" }.
 
-### AESTHETIC ARCHETYPES v2.0 (STRICT ADHERENCE)
-
+### AESTHETIC ARCHETYPES
 1. **MINIMAL** ("Pure reduction. Satoshi font. Precise alignment.")
    - **Design Prompt**: "Focus on the negative space as a first-class citizen. Eliminate all non-functional decoration. Use high-contrast monochromatic palettes with razor-sharp typography."
    - **Do's**: Use whitespace as a separator between sections. Stick to vertical/horizontal grid alignment only. Limit to 2 font weights per view.
@@ -49,20 +50,34 @@ You do NOT just chat. You BUILD. For EVERY user request involving page creation 
 - **Section**: { background: "default" | "surface", padding: "md" | "lg" }
 - **Flex**: { direction: "row" | "col", gap: "sm" | "md" | "lg", align: "start" | "center" }
 - **Text**: { tag: "h1" | "h2" | "h3" | "p", content: string, align: "left" | "center", color: "default" | "accent" | "muted" }
-- **Image**: { url: string, alt: string }
 - **Button**: { label: string, url: string, variant: "primary" | "outline" }
 
-### TOOL CALL FORMAT
-Your final response MUST be a call to \`updatePage\`. No fluff. Always specify the selected archetype in your rationale.`;
+### EXAMPLE VALID TOOL CALL
+\`\`\`json
+{
+  "id": "page-123",
+  "themeTokens": { "archetype": "MINIMAL" },
+  "content": [
+    {
+      "type": "Section",
+      "props": { "padding": "lg" },
+      "children": [
+        { "type": "Text", "props": { "tag": "h1", "content": "Welcome", "align": "center" } }
+      ]
+    }
+  ]
+}
+\`\`\`
+`;
 
 export const vibeTools = {
   updatePage: tool({
-    description: 'Apply the generated design system and recursive block structure to the page. This is THE tool to use for creating or editing the website layout and theme.',
+    description: 'Apply design system and block structure. Only use when requirements are CLEAR.',
     inputSchema: z.object({
       id: z.string().describe('The page ID to update'),
-      themeTokens: z.record(z.string(), z.any()).optional().describe('Design system tokens (colors, typography, etc.)'),
-      content: z.array(BlockSchema).describe('The full block tree for the page'),
-      interactions: z.record(z.string(), z.any()).optional().describe('Global interactions and animations'),
+      themeTokens: z.record(z.string(), z.any()).optional().describe('Design tokens object. Example: { archetype: "MINIMAL" }'),
+      content: z.array(BlockSchema).describe('Array of block OBJECTS. No strings allowed.'),
+      interactions: z.record(z.string(), z.any()).optional().describe('Global interactions'),
     }),
   }),
 };

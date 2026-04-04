@@ -21,6 +21,7 @@ export function useVibeAssistant({ id, onUpdate }: AssistantOptions) {
 
   const chat = (useChat as any)({
     id, // Set a stable ID for the chat state
+    api: `/api/assistant`,
     transport: new DefaultChatTransport({
       api: `/api/assistant`,
     }),
@@ -30,20 +31,32 @@ export function useVibeAssistant({ id, onUpdate }: AssistantOptions) {
 
   useEffect(() => {
     for (const message of messages) {
+      // Check toolInvocations (legacy/compatibility)
       const invocations = (message as any).toolInvocations;
-
       if (invocations && Array.isArray(invocations)) {
         for (const tool of invocations) {
-          const isResult = tool.state === 'result';
-          if (tool.toolName === 'updatePage' && isResult) {
+          if (tool.toolName === 'updatePage' && tool.state === 'result' && tool.result) {
             const callId = tool.toolCallId;
             if (callId && !processedToolCalls.current.has(callId)) {
-              if (tool.result) {
-                console.log('Applying AI update for page:', id);
-                onUpdate(tool.result);
-                queryClient.invalidateQueries({ queryKey: pageQueryOptions(id).queryKey });
-                processedToolCalls.current.add(callId);
-              }
+              console.log('Applying AI update (via toolInvocations) for page:', id);
+              onUpdate(tool.result);
+              queryClient.invalidateQueries({ queryKey: pageQueryOptions(id).queryKey });
+              processedToolCalls.current.add(callId);
+            }
+          }
+        }
+      }
+
+      // Check parts (modern AI SDK 5.0+)
+      if (message.parts && Array.isArray(message.parts)) {
+        for (const part of message.parts) {
+          if (part.type === 'tool-updatePage' && part.state === 'output-available' && part.output) {
+            const callId = part.toolCallId;
+            if (callId && !processedToolCalls.current.has(callId)) {
+              console.log('Applying AI update (via parts) for page:', id);
+              onUpdate(part.output);
+              queryClient.invalidateQueries({ queryKey: pageQueryOptions(id).queryKey });
+              processedToolCalls.current.add(callId);
             }
           }
         }
@@ -56,7 +69,11 @@ export function useVibeAssistant({ id, onUpdate }: AssistantOptions) {
       console.log('Sending AI message via sendMessage:', { text, id, ...options });
       try {
         if (typeof chatSendMessage === 'function') {
-          await chatSendMessage({ text }, {
+          // Use the more explicit parts structure for maximum compatibility
+          await chatSendMessage({
+            role: 'user',
+            parts: [{ type: 'text', text }]
+          }, {
             body: {
               id,
               model: options?.model,

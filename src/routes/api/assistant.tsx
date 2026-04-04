@@ -3,10 +3,16 @@ import { streamText, convertToModelMessages } from 'ai'
 import { vibeAgent } from '#/lib/ai/vibe-assistant'
 import { getSessionUser } from '#/lib/session.server'
 import { internalUpdatePage } from '#/lib/pages.functions'
+import { openrouter } from '#/lib/ai/openrouter'
 
 export const Route = createFileRoute('/api/assistant')({
   server: {
     handlers: {
+      GET: async () => {
+        return new Response(JSON.stringify({ status: 'ok', service: 'assistant' }), {
+          headers: { 'Content-Type': 'application/json' },
+        });
+      },
       POST: async ({ request }) => {
         console.log('--- AI Assistant Request Start ---');
         const user = await getSessionUser(request)
@@ -22,7 +28,7 @@ export const Route = createFileRoute('/api/assistant')({
 
         const result = streamText({
           ...vibeAgent,
-          model: model ? (model as any) : vibeAgent.model,
+          model: model ? openrouter(model) : vibeAgent.model,
           messages: await convertToModelMessages(messages),
           tools: {
             ...vibeAgent.tools,
