@@ -8,6 +8,7 @@ import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import neon from './neon-vite-plugin.ts'
 import contentCollections from '@content-collections/vite'
+import netlify from '@netlify/vite-plugin-tanstack-start'
 
 const config = defineConfig({
   plugins: [
@@ -18,6 +19,7 @@ const config = defineConfig({
     tailwindcss(),
     tanstackStart(),
     viteReact(),
+    netlify(),
   ],
   server: {
     port: 3000,
