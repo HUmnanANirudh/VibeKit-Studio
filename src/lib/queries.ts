@@ -1,7 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
 import { getPages, getPage, getPublicPage } from './pages.functions'
-
-// Query Options
 export const pagesQueryOptions = queryOptions({
   queryKey: ['pages'] as const,
   queryFn: () => getPages(),

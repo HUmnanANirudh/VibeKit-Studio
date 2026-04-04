@@ -30,9 +30,9 @@ export function AuthForm({
         <CardHeader className="space-y-1 text-center">
           <Link
             to="/"
-            className="text-2xl font-black italic tracking-tighter mb-4 block"
+            className="text-3xl font-black italic tracking-tighter mb-6 block"
           >
-            VIBE<span className="text-primary">KIT</span>
+            THEMEL<span className="text-accent italic">Y</span>
           </Link>
           <CardTitle className="text-2xl">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>

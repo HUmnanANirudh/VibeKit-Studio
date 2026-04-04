@@ -34,61 +34,10 @@ export const pages = pgTable('pages', {
   theme: text('theme').notNull().default('minimal'), // one of 6 vibe presets
   status: text('status').notNull().default('draft'), // 'draft' | 'published'
 
-  // Dynamic content and Design System stored as JSONB for Puck editor
+  // Dynamic content and Design System stored as JSONB
   content: jsonb('content').default([]).notNull(),
   themeTokens: jsonb('theme_tokens').default({}).notNull(),
   interactions: jsonb('interactions').default({}).notNull(),
-
-  // Page sections stored as JSONB
-  heroSection: jsonb('hero_section').default({
-    title: 'Welcome to My Site',
-    subtitle: 'A beautiful mini-site built with VibeKit Studio',
-    buttonText: 'Get Started',
-    buttonUrl: '#contact',
-  }),
-
-  featuresSection: jsonb('features_section').default([
-    {
-      title: 'Feature One',
-      description: 'Describe your first amazing feature here.',
-    },
-    {
-      title: 'Feature Two',
-      description: 'Explain what makes this feature special.',
-    },
-    {
-      title: 'Feature Three',
-      description: 'Share another benefit or capability.',
-    },
-  ]),
-
-  gallerySection: jsonb('gallery_section').default([
-    {
-      url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
-      alt: 'Gallery image 1',
-    },
-    {
-      url: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800',
-      alt: 'Gallery image 2',
-    },
-    {
-      url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800',
-      alt: 'Gallery image 3',
-    },
-  ]),
-
-  contactSection: jsonb('contact_section').default({
-    heading: 'Get In Touch',
-    subheading: 'We would love to hear from you.',
-  }),
-
-  // Section order (array of section names)
-  sectionOrder: jsonb('section_order').default([
-    'hero',
-    'features',
-    'gallery',
-    'contact',
-  ]),
 
   viewCount: integer('view_count').notNull().default(0),
   createdAt: timestamp('created_at').defaultNow().notNull(),

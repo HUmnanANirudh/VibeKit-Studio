@@ -5,12 +5,12 @@ import { Button } from '#/components/ui/button'
 import { ExternalLink, Copy, Edit, Loader2 } from 'lucide-react'
 
 const THEMES: Record<string, { label: string; color: string }> = {
-  minimal: { label: 'Minimal', color: '#18181B' },
-  'neo-brutal': { label: 'Neo-Brutal', color: '#FF3F00' },
-  'dark-neon': { label: 'Dark/Neon', color: '#00FFB2' },
-  pastel: { label: 'Pastel', color: '#C084FC' },
-  luxury: { label: 'Luxury', color: '#C9A96E' },
-  retro: { label: 'Retro', color: '#FFD700' },
+  minimal: { label: 'Minimal', color: '#1a1a1a' },
+  'neo-brutal': { label: 'Neo-Brutal', color: '#ff3e00' },
+  'dark-neon': { label: 'Dark/Neon', color: '#00ffcc' },
+  'pastel-soft': { label: 'Pastel Soft', color: '#ffb7ce' },
+  'luxury-serif': { label: 'Luxury Serif', color: '#c5a059' },
+  'retro-pixel': { label: 'Retro Pixel', color: '#00ff41' },
 }
 
 import type { PageCardProps } from '#/types'

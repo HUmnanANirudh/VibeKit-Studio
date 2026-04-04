@@ -51,7 +51,6 @@ export async function apiFetch(url: string, options: RequestInit = {}) {
     return response
   } catch (err: any) {
     console.error('API Fetch error:', err)
-    // Return a mock response object that looks like a 503/500 error
     return new Response(JSON.stringify({ error: 'Network error or server unreachable' }), {
       status: 503,
       headers: { 'Content-Type': 'application/json' }

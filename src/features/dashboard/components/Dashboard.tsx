@@ -71,12 +71,9 @@ export function Dashboard() {
             to="/"
             className="text-xl font-black italic tracking-tighter text-slate-900"
           >
-            VIBE<span className="text-primary italic">KIT</span>
+            THEMEL<span className="text-accent italic">Y</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Button size="sm" onClick={() => setShowNewModal(true)}>
-              <Plus className="mr-2 h-4 w-4" /> New Page
-            </Button>
             <Button
               variant="ghost"
               size="sm"

@@ -4,7 +4,7 @@ export const openrouter = createOpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY || '',
 })
 
-export const FREE_MODELS = [
+export const MODELS = [
   'stepfun/step-3.5-flash:free',
   'nvidia/nemotron-3-super-120b-a12b:free',
   'arcee-ai/trinity-large-preview:free',

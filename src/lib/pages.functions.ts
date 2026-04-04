@@ -7,7 +7,9 @@ import { eq, and } from 'drizzle-orm'
 import { z } from 'zod'
 import type { PageRenderData } from '#/types'
 
-// Helper to check auth
+const isUuid = (val: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val)
+const getIdentifier = (id: string) => isUuid(id) ? eq(pages.id, id) : eq(pages.slug, id.replace('.themely.site', ''))
+
 async function requireAuth() {
   const request = getRequest()
   if (!request) throw new Error('No request')
@@ -16,7 +18,6 @@ async function requireAuth() {
   return user
 }
 
-// 1. Get all pages for user
 export const getPages = createServerFn({ method: 'GET' })
   .handler(async () => {
     const user = await requireAuth()
@@ -29,7 +30,6 @@ export const getPages = createServerFn({ method: 'GET' })
     return results as unknown as PageRenderData[]
   })
 
-// 2. Get single page
 export const getPage = createServerFn({ method: 'GET' })
   .inputValidator(z.string())
   .handler(async ({ data: id }) => {
@@ -38,14 +38,13 @@ export const getPage = createServerFn({ method: 'GET' })
     const [page] = await db
       .select()
       .from(pages)
-      .where(and(eq(pages.id, id), eq(pages.userId, user.id)))
+      .where(and(getIdentifier(id), eq(pages.userId, user.id)))
       .limit(1)
 
     if (!page) throw new Error('Page not found')
     return page as unknown as PageRenderData
   })
 
-// 3. Get public page by slug (No Auth Required)
 export const getPublicPage = createServerFn({ method: 'GET' })
   .inputValidator(z.string())
   .handler(async ({ data: slug }) => {
@@ -60,7 +59,6 @@ export const getPublicPage = createServerFn({ method: 'GET' })
     return page as unknown as PageRenderData
   })
 
-// 4. Create new page
 export const createPage = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
@@ -87,7 +85,6 @@ export const createPage = createServerFn({ method: 'POST' })
     return newPage as unknown as PageRenderData
   })
 
-// 5. Update page
 export const updatePage = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
@@ -100,7 +97,6 @@ export const updatePage = createServerFn({ method: 'POST' })
     return await internalUpdatePage(data.id, user.id, data.updates)
   })
 
-// Internal update logic for modular re-use (AI Agent)
 export async function internalUpdatePage(id: string, userId: string, updates: any) {
   const db = getDb()
   const [updated] = await db
@@ -109,25 +105,26 @@ export async function internalUpdatePage(id: string, userId: string, updates: an
       ...updates,
       updatedAt: new Date(),
     })
-    .where(and(eq(pages.id, id), eq(pages.userId, userId)))
+    .where(and(getIdentifier(id), eq(pages.userId, userId)))
     .returning()
 
   if (!updated) throw new Error('Failed to update page')
   return updated as unknown as PageRenderData
 }
 
-// 6. Duplicate page
 export const duplicatePage = createServerFn({ method: 'POST' })
   .inputValidator(z.string())
   .handler(async ({ data: id }) => {
     const user = await requireAuth()
     const db = getDb()
 
-    const [source] = await db
+    const results = await db
       .select()
       .from(pages)
-      .where(and(eq(pages.id, id), eq(pages.userId, user.id)))
+      .where(and(getIdentifier(id), eq(pages.userId, user.id)))
       .limit(1)
+
+    const source = results[0]
 
     if (!source) throw new Error('Source page not found')
 
@@ -139,18 +136,15 @@ export const duplicatePage = createServerFn({ method: 'POST' })
         slug: `${source.slug}-copy-${Math.random().toString(36).substring(2, 5)}`,
         theme: source.theme,
         status: 'draft',
-        heroSection: source.heroSection,
-        featuresSection: source.featuresSection,
-        gallerySection: source.gallerySection,
-        contactSection: source.contactSection,
-        sectionOrder: source.sectionOrder,
+        content: source.content,
+        themeTokens: source.themeTokens,
+        interactions: source.interactions,
       })
       .returning()
 
     return duplicated as unknown as PageRenderData
   })
 
-// 7. Publish/Unpublish page
 export const publishPage = createServerFn({ method: 'POST' })
   .inputValidator(
     z.object({
@@ -168,7 +162,7 @@ export const publishPage = createServerFn({ method: 'POST' })
         status: data.publish ? 'published' : 'draft',
         publishedAt: data.publish ? new Date() : null,
       })
-      .where(and(eq(pages.id, data.id), eq(pages.userId, user.id)))
+      .where(and(getIdentifier(data.id), eq(pages.userId, user.id)))
       .returning()
 
     return updated as unknown as PageRenderData

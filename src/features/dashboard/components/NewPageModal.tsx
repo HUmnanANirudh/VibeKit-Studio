@@ -19,12 +19,12 @@ import {
 import { Loader2 } from 'lucide-react'
 
 const THEMES = [
-  { value: 'minimal', label: 'Minimal', color: '#18181B' },
-  { value: 'neo-brutal', label: 'Neo-Brutal', color: '#FF3F00' },
-  { value: 'dark-neon', label: 'Dark/Neon', color: '#00FFB2' },
-  { value: 'pastel', label: 'Pastel', color: '#C084FC' },
-  { value: 'luxury', label: 'Luxury', color: '#C9A96E' },
-  { value: 'retro', label: 'Retro', color: '#FFD700' },
+  { value: 'minimal', label: 'Minimal', color: '#1a1a1a' },
+  { value: 'neo-brutal', label: 'Neo-Brutal', color: '#ff3e00' },
+  { value: 'dark-neon', label: 'Dark/Neon', color: '#00ffcc' },
+  { value: 'pastel-soft', label: 'Pastel Soft', color: '#ffb7ce' },
+  { value: 'luxury-serif', label: 'Luxury Serif', color: '#c5a059' },
+  { value: 'retro-pixel', label: 'Retro Pixel', color: '#00ff41' },
 ]
 
 import type { NewPageModalProps, Theme } from '#/types'

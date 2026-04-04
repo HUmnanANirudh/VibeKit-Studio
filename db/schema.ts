@@ -138,9 +138,9 @@ export type Theme =
   | 'minimal'
   | 'neo-brutal'
   | 'dark-neon'
-  | 'pastel'
-  | 'luxury'
-  | 'retro'
+  | 'pastel-soft'
+  | 'luxury-serif'
+  | 'retro-pixel'
 
 // ============================================
 // SESSIONS TABLE

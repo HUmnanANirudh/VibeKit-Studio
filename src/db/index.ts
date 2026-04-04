@@ -15,6 +15,4 @@ export function getDb() {
   const sql = neon(url)
   return drizzle(sql, { schema })
 }
-
-export const db = getDb()
 export { schema }

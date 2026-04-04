@@ -3,10 +3,9 @@ import { getDb } from '../../../db/index'
 import { users, sessions, type User, type NewUser } from '../../../db/schema'
 
 export class AuthRepository {
-  private db = getDb()
-
   async getUserByEmail(email: string): Promise<User | undefined> {
-    const [user] = await this.db
+    const db = getDb()
+    const [user] = await db
       .select()
       .from(users)
       .where(eq(users.email, email))
@@ -15,7 +14,8 @@ export class AuthRepository {
   }
 
   async createUser(data: NewUser): Promise<User> {
-    const [user] = await this.db
+    const db = getDb()
+    const [user] = await db
       .insert(users)
       .values(data)
       .returning()
@@ -23,7 +23,8 @@ export class AuthRepository {
   }
 
   async createSession(userId: string, refreshToken: string, expiresAt: Date) {
-    return await this.db.insert(sessions).values({
+    const db = getDb()
+    return await db.insert(sessions).values({
       userId,
       refreshToken,
       expiresAt,
@@ -31,11 +32,13 @@ export class AuthRepository {
   }
 
   async deleteSession(refreshToken: string) {
-    return await this.db.delete(sessions).where(eq(sessions.refreshToken, refreshToken))
+    const db = getDb()
+    return await db.delete(sessions).where(eq(sessions.refreshToken, refreshToken))
   }
 
   async getSessionByToken(refreshToken: string) {
-    const [session] = await this.db
+    const db = getDb()
+    const [session] = await db
       .select()
       .from(sessions)
       .where(eq(sessions.refreshToken, refreshToken))
