@@ -1,16 +1,9 @@
-
-/**
- * Reconstructs a Record from an array of Key-Value pairs
- */
 export function reconstructRecord(arr: { key: string, value: any }[]) {
   const obj: any = {};
   for (const p of arr) obj[p.key] = p.value;
   return obj;
 }
 
-/**
- * Transforms AI-generated array-based structure into Page content structure.
- */
 export function transformAssistantUpdate(update: any) {
   const reconstructBlocks = (blocks: any[]) => blocks.map(b => ({
     type: b.type,
@@ -38,6 +31,6 @@ export function transformAssistantUpdate(update: any) {
       zones: reconstructedZones,
     },
     interactions: update.interactions,
-    sectionOrder: [], // Dynamic layout uses blocks, not sectionOrder
+    sectionOrder: [],
   };
 }

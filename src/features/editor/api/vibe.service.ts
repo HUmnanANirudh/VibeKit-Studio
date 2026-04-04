@@ -9,6 +9,11 @@ interface AssistantOptions {
   onUpdate: (page: Page) => void;
 }
 
+export type SendAssistantMessage = (
+  text: string,
+  options?: { model?: string; mode?: string; theme?: string }
+) => void
+
 export function useVibeAssistant({ id, onUpdate }: AssistantOptions) {
   const queryClient = useQueryClient()
   const processedToolCalls = useRef<Set<string>>(new Set())
@@ -44,9 +49,23 @@ export function useVibeAssistant({ id, onUpdate }: AssistantOptions) {
     }
   }, [messages, id, onUpdate, queryClient]);
 
-  const handleSendMessage = useCallback(
-    (text: string) => append({ role: 'user', content: text }),
-    [append]
+  const handleSendMessage: SendAssistantMessage = useCallback(
+    (text: string, options?: { model?: string; mode?: string; theme?: string }) => {
+      const url = new URL(`/api/vibe-assistant`, window.location.origin)
+      url.searchParams.set('id', id)
+      if (options?.model) url.searchParams.set('model', options.model)
+      if (options?.mode) url.searchParams.set('mode', options.mode)
+      if (options?.theme) url.searchParams.set('theme', options.theme)
+      
+      append({ role: 'user', content: text }, { 
+        data: { 
+          model: options?.model, 
+          mode: options?.mode,
+          theme: options?.theme
+        } 
+      })
+    },
+    [append, id]
   );
 
   return {

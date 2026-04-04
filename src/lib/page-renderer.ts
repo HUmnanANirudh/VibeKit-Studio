@@ -1,6 +1,3 @@
-// Shared page HTML generator — used by the editor preview AND the public page renderer
-// This ensures preview = published (same tokens, same layout rules)
-
 import type {
   HeroSection,
   FeatureCard,
@@ -97,7 +94,37 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
   const blocks = Array.isArray(content) ? content : (content as any)?.blocks || []
 
   const renderBlock = (block: any): string => {
+    const childrenHTML = block.children ? block.children.map(renderBlock).join('\n') : ''
+    
     switch (block.type) {
+      case 'Section':
+        return `
+          <section class="section reveal ${block.props?.background === 'surface' ? 'bg-surface' : ''} p-${block.props?.padding || 'md'}">
+            <div class="container">
+              ${childrenHTML}
+            </div>
+          </section>`
+      case 'Flex':
+        return `
+          <div class="flex-container flex-${block.props?.direction || 'row'} gap-${block.props?.gap || 'md'} align-${block.props?.align || 'center'}">
+            ${childrenHTML}
+          </div>`
+      case 'Text':
+        const Tag = block.props?.tag || 'p'
+        return `
+          <${Tag} class="text-block text-${block.props?.align || 'left'} color-${block.props?.color || 'default'}">
+            ${block.props?.content || ''}
+          </${Tag}>`
+      case 'Image':
+        return `
+          <div class="image-block">
+            <img src="${block.props?.url}" alt="${block.props?.alt || ''}" class="w-full h-auto rounded-lg shadow-sm" loading="lazy" />
+          </div>`
+      case 'Button':
+        return `
+          <div class="button-block">
+            <a href="${block.props?.url || '#'}" class="btn btn-${block.props?.variant || 'primary'}">${block.props?.label}</a>
+          </div>`
       case 'Hero':
         return `
           <section class="section hero-section reveal">
@@ -205,6 +232,29 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
     .w-full{width:100%}
     .mx-auto{margin-left:auto;margin-right:auto}
     .max-w-lg{max-width:32rem}
+    
+    .bg-surface{background:var(--surface)}
+    .p-md{padding:2rem 0}
+    .p-lg{padding:4rem 0}
+    
+    .flex-container{display:flex;width:100%}
+    .flex-row{flex-direction:row}
+    .flex-col{flex-direction:column}
+    .gap-sm{gap:1rem}
+    .gap-md{gap:2rem}
+    .gap-lg{gap:4rem}
+    .align-start{align-items:flex-start;text-align:left}
+    .align-center{align-items:center;text-align:center}
+    
+    .text-block{margin-bottom:1rem;max-width:800px}
+    .text-center{text-align:center;margin-left:auto;margin-right:auto}
+    .text-left{text-align:left}
+    .color-default{color:var(--text)}
+    .color-accent{color:var(--accent)}
+    .color-muted{color:var(--text);opacity:0.6}
+    
+    .image-block{margin:1rem 0}
+    .button-block{margin:1.5rem 0}
     
     .btn{
       display:inline-flex;align-items:center;justify-content:center;
