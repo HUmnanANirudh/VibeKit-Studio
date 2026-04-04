@@ -13,12 +13,6 @@
   to = "/.netlify/functions/auth"
   status = 200
 
-# SPA fallback — all deep links return index.html
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
