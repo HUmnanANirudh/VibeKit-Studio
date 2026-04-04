@@ -1,4 +1,5 @@
 import { useChat } from '@ai-sdk/react'
+import { DefaultChatTransport } from 'ai'
 import { useRef, useEffect, useCallback } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { pageQueryOptions } from '#/lib/queries'
@@ -18,27 +19,28 @@ export function useVibeAssistant({ id, onUpdate }: AssistantOptions) {
   const queryClient = useQueryClient()
   const processedToolCalls = useRef<Set<string>>(new Set())
 
-  const { messages, append, status, stop, error } = (useChat as any)({
-    api: `/api/vibe-assistant?id=${id}`,
-    initialMessages: [],
+  const chat = (useChat as any)({
+    id, // Set a stable ID for the chat state
+    transport: new DefaultChatTransport({
+      api: `/api/assistant`,
+    }),
   })
+
+  const { messages, sendMessage: chatSendMessage, status, stop, error } = chat as any
 
   useEffect(() => {
     for (const message of messages) {
-      const invocations = (message as any).toolInvocations ||
-        (message as any).parts?.filter((p: any) => p.type === 'tool-invocation' || p.type === 'tool-call')
-          .map((p: any) => p.toolInvocation || p.toolCall);
+      const invocations = (message as any).toolInvocations;
 
       if (invocations && Array.isArray(invocations)) {
         for (const tool of invocations) {
-          const isResult = tool.state === 'result' || tool.result !== undefined;
+          const isResult = tool.state === 'result';
           if (tool.toolName === 'updatePage' && isResult) {
-            const callId = tool.toolCallId || tool.id;
+            const callId = tool.toolCallId;
             if (callId && !processedToolCalls.current.has(callId)) {
-              const result = tool.result;
-
-              if (result) {
-                onUpdate(result as any);
+              if (tool.result) {
+                console.log('Applying AI update for page:', id);
+                onUpdate(tool.result);
                 queryClient.invalidateQueries({ queryKey: pageQueryOptions(id).queryKey });
                 processedToolCalls.current.add(callId);
               }
@@ -50,22 +52,26 @@ export function useVibeAssistant({ id, onUpdate }: AssistantOptions) {
   }, [messages, id, onUpdate, queryClient]);
 
   const handleSendMessage: SendAssistantMessage = useCallback(
-    (text: string, options?: { model?: string; mode?: string; theme?: string }) => {
-      const url = new URL(`/api/vibe-assistant`, window.location.origin)
-      url.searchParams.set('id', id)
-      if (options?.model) url.searchParams.set('model', options.model)
-      if (options?.mode) url.searchParams.set('mode', options.mode)
-      if (options?.theme) url.searchParams.set('theme', options.theme)
-      
-      append({ role: 'user', content: text }, { 
-        data: { 
-          model: options?.model, 
-          mode: options?.mode,
-          theme: options?.theme
-        } 
-      })
+    async (text: string, options?: { model?: string; mode?: string; theme?: string }) => {
+      console.log('Sending AI message via sendMessage:', { text, id, ...options });
+      try {
+        if (typeof chatSendMessage === 'function') {
+          await chatSendMessage({ text }, {
+            body: {
+              id,
+              model: options?.model,
+              mode: options?.mode,
+              theme: options?.theme,
+            },
+          });
+        } else {
+          console.error('sendMessage is not a function!', typeof chatSendMessage);
+        }
+      } catch (err: any) {
+        console.error('Failed to send AI message:', err.message, err.stack, err);
+      }
     },
-    [append, id]
+    [chatSendMessage, id]
   );
 
   return {

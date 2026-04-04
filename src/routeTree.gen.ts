@@ -15,7 +15,7 @@ import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as PSlugRouteImport } from './routes/p/$slug'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as ApiVibeAssistantRouteImport } from './routes/api.vibe-assistant'
+import { Route as ApiAssistantRouteImport } from './routes/api/assistant'
 import { Route as AppPagesIdRouteImport } from './routes/app/pages/$id'
 import { Route as ApiAuthSignupRouteImport } from './routes/api/auth/signup'
 import { Route as ApiAuthRefreshRouteImport } from './routes/api/auth/refresh'
@@ -52,9 +52,9 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiVibeAssistantRoute = ApiVibeAssistantRouteImport.update({
-  id: '/api/vibe-assistant',
-  path: '/api/vibe-assistant',
+const ApiAssistantRoute = ApiAssistantRouteImport.update({
+  id: '/api/assistant',
+  path: '/api/assistant',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppPagesIdRoute = AppPagesIdRouteImport.update({
@@ -86,7 +86,7 @@ const ApiAuthLoginRoute = ApiAuthLoginRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
-  '/api/vibe-assistant': typeof ApiVibeAssistantRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
@@ -99,7 +99,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/api/vibe-assistant': typeof ApiVibeAssistantRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
@@ -114,7 +114,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
-  '/api/vibe-assistant': typeof ApiVibeAssistantRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
@@ -130,7 +130,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
-    | '/api/vibe-assistant'
+    | '/api/assistant'
     | '/auth/login'
     | '/auth/signup'
     | '/p/$slug'
@@ -143,7 +143,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/api/vibe-assistant'
+    | '/api/assistant'
     | '/auth/login'
     | '/auth/signup'
     | '/p/$slug'
@@ -157,7 +157,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
-    | '/api/vibe-assistant'
+    | '/api/assistant'
     | '/auth/login'
     | '/auth/signup'
     | '/p/$slug'
@@ -172,7 +172,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
-  ApiVibeAssistantRoute: typeof ApiVibeAssistantRoute
+  ApiAssistantRoute: typeof ApiAssistantRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
   PSlugRoute: typeof PSlugRoute
@@ -226,11 +226,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/vibe-assistant': {
-      id: '/api/vibe-assistant'
-      path: '/api/vibe-assistant'
-      fullPath: '/api/vibe-assistant'
-      preLoaderRoute: typeof ApiVibeAssistantRouteImport
+    '/api/assistant': {
+      id: '/api/assistant'
+      path: '/api/assistant'
+      fullPath: '/api/assistant'
+      preLoaderRoute: typeof ApiAssistantRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/pages/$id': {
@@ -286,7 +286,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
-  ApiVibeAssistantRoute: ApiVibeAssistantRoute,
+  ApiAssistantRoute: ApiAssistantRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
   PSlugRoute: PSlugRoute,

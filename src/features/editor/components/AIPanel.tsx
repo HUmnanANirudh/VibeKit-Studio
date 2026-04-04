@@ -69,7 +69,7 @@ const THEMES = [
 interface AIPanelProps {
   messages: any[]
   sendMessage: SendAssistantMessage
-  status: 'idle' | 'streaming' | 'submitting' | 'ready'
+  status: 'idle' | 'submitted' | 'streaming'
   stop: () => void
   error?: Error | null
 }
@@ -84,16 +84,16 @@ export function AIPanel({
   const [selectedModel, setSelectedModel] = useState('openrouter/auto')
   const [selectedTheme, setSelectedTheme] = useState('minimal')
 
-  const handleSendMessage = useCallback(
-    (promptMessage: any) => {
-      const text = typeof promptMessage === 'string' ? promptMessage : promptMessage.text
-      if (!text || status === 'streaming') return
-      sendMessage(text, { model: selectedModel, theme: selectedTheme })
-    },
-    [sendMessage, status, selectedModel, selectedTheme],
-  )
+  const isGenerating = status === 'streaming' || status === 'submitted'
 
-  const isGenerating = status === 'streaming' || status === 'submitting'
+  const handleSendMessage = useCallback(
+    async (promptMessage: any) => {
+      const text = typeof promptMessage === 'string' ? promptMessage : promptMessage.text
+      if (!text || isGenerating) return
+      await sendMessage(text, { model: selectedModel, theme: selectedTheme })
+    },
+    [sendMessage, isGenerating, selectedModel, selectedTheme],
+  )
 
   return (
     <PromptInputProvider>
@@ -199,7 +199,7 @@ export function AIPanel({
               className="absolute right-1 bottom-1"
               disabled={isGenerating}
               onStop={stop}
-              status={isGenerating ? 'streaming' : 'ready'}
+              status={status as any}
             />
           </PromptInput>
         </div>
