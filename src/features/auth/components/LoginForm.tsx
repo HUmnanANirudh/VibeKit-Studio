@@ -32,7 +32,7 @@ export function LoginForm() {
   return (
     <AuthForm
       title="Welcome back"
-      description="Log in to your Themely Studio account"
+      description="Log in to your VibeKit Studio account"
       submitLabel="Log in"
       loadingLabel="Logging in..."
       loading={loginMutation.isPending}

@@ -7,15 +7,14 @@
   targetPort = 3000
   framework = "#custom"
 
-# API redirects to Netlify Functions
 [[redirects]]
-  from = "/api/auth/*"
-  to = "/.netlify/functions/auth"
+  from = "/*"
+  to = "/.netlify/functions/server"
   status = 200
-  
+
 [functions]
-  directory = "netlify/functions"
   node_bundler = "esbuild"
+  included_files = ["dist/server/**"]
 
 [build.environment]
   NODE_VERSION = "20"
