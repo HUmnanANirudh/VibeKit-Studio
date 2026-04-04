@@ -1,5 +1,4 @@
 # VIBEKIT STUDIO
-> Generate a theme, build a mini-site, publish it.
 
 **VibeKit Studio** is a sophisticated, AI-driven mini-site builder that allows users to generate and edit "vibe-based" websites through a natural language interface.
 
@@ -91,14 +90,12 @@ VibeKit Studio implements a robust, production-grade authentication system:
 ## Tradeoffs & Future Fixes
 
 1. **`srcDoc` Preview**: Currently renders the page in an `iframe` using `srcDoc`. This ensures perfect rendering isolation but causes a full reload on every state change. **Next Step**: Implement a message-based partial update system between parent and iframe.
-2. **AI SDK v6 Migration**: The rapid migration to SDK v6 used some `as any` types to bypass complex union type overlaps during the streaming response setup. **Next Step**: Fully type the part-based message structure.
-3. **Asset Storage**: Gallery images currently use external URLs. **Next Step**: Integrate a cloud storage solution like Uploadthing or Cloudinary for local image uploads.
-4. **Drag-and-Drop**: Section reordering is handled via buttons or the AI. **Next Step**: Add [dnd-kit] for a more tactile drag-and-drop experience.
-5. **E2E Testing**: No automated visual testing currently exists. **Next Step**: Add Playwright tests to verify that the generated HTML matches the vibey CSS tokens across all 6 archetypes.
+2. **Asset Storage**: Gallery images currently use external URLs. **Next Step**: Integrate a cloud storage solution like Uploadthing or Cloudinary for local image uploads.
+3. **Drag-and-Drop**: Section reordering is handled via buttons or the AI. **Next Step**: Add [dnd-kit] for a more tactile drag-and-drop experience.
 
 ---
 
-## 👤 Test User
+## Test User
 - **Email**: `test@gmail.com`
 - **Password**: `password123`
 *(Or feel free to sign up!)*
