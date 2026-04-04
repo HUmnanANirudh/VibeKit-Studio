@@ -1,301 +1,104 @@
-Welcome to your new TanStack Start app!
+# VIBEKIT STUDIO
+> Generate a theme, build a mini-site, publish it.
 
-# Getting Started
+**VibeKit Studio** is a sophisticated, AI-driven mini-site builder that allows users to generate and edit "vibe-based" websites through a natural language interface.
 
-To run this application:
-
-```bash
-npm install
-npm run dev
-```
-
-# Building For Production
-
-To build this application for production:
-
-```bash
-npm run build
-```
-
-## Testing
-
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
-
-```bash
-npm run test
-```
-
-## Styling
-
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `npm install @tailwindcss/vite tailwindcss -D`
-
-## Linting & Formatting
-
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
-
-```bash
-npm run lint
-npm run format
-npm run check
-```
-
-## Setting up Neon
-
-When running the `dev` command, `vite-plugin-neon-new` will identify there is not a database setup. It will then create and seed a claimable database.
-
-It is the same process as [Neon Launchpad](https://neon.new).
-
-> [!IMPORTANT]  
-> Claimable databases expire in 72 hours.
-
-## Shadcn
-
-Add components using the latest version of [Shadcn](https://ui.shadcn.com/).
-
-```bash
-pnpm dlx shadcn@latest add button
-```
-
-# Resume Example
-
-A professional resume template built with TanStack Start and content-collections for Netlify deployment.
+---
 
 ## Features
 
-- **Content Collections**: Work experience and education managed as markdown files
-- **Skills Filter**: Interactive sidebar to filter jobs by skills/technologies
-- **Beautiful UI**: Modern design with shadcn/ui components
-- **SSR Ready**: Full server-side rendering with TanStack Start
+### 1. AI Website Architect (Vibe Assistant)
+Natural language page generation and editing powered by **Vercel AI SDK v6**. Modify layouts, generate copy, and apply themes instantly.
 
-## Project Structure
+### 2. Live Visual Editor
+- **Real-time Preview**: Split-screen view with immediate feedback.
+- **Responsive Controls**: Test your designs at Desktop (100%), Tablet (768px), and Mobile (375px) widths with animated transitions.
+- **Section Management**: Reorder (Up/Down) or delete sections (Hero, Features, Gallery, Contact).
 
-```
-├── content/
-│   ├── jobs/              # Work experience entries
-│   └── education/         # Education entries
-├── src/
-│   ├── components/
-│   │   └── ui/            # Shadcn UI components
-│   │       ├── badge.tsx
-│   │       ├── card.tsx
-│   │       ├── checkbox.tsx
-│   │       ├── hover-card.tsx
-│   │       └── separator.tsx
-│   ├── lib/
-│   │   └── utils.ts       # Utility functions
-│   └── routes/
-│       ├── __root.tsx     # Root layout
-│       └── index.tsx      # Resume page
-└── public/
-    └── headshot-on-white.jpg
-```
+### 3. "Vibe" System (Archetypes 2.0)
+Choose from 6 distinct design archetypes, each with unique color tokens, typography scales, spacing, and button styles:
+- **Minimal**: High contrast, precise alignment, 'Satoshi' font.
+- **Neo-Brutal**: Harsh black borders, 'Cabinet Grotesk', yellow accents.
+- **Dark Neon**: Midnight backgrounds, neon borders, 'Space Grotesk'.
+- **Pastel Soft**: Rounded (32px), pink gradients, 'Plus Jakarta Sans'.
+- **Luxury Serif**: Elegant 'Playfair Display', gold accents, editorial spacing.
+- **Retro Pixel**: 8-bit aesthetic, 'JetBrains Mono', vibrant pixel colors.
 
-## Adding Work Experience
+### 4. Analytics & Contact Submissions
+- **Click Tracking**: Every visit is tracked; total and individual view counts are displayed on the dashboard.
+- **Message Center**: Fully functional contact form. Submissions are stored in the DB and can be viewed in the "Messages" modal on the dashboard.
 
-Create a new markdown file in `content/jobs/` with the following frontmatter:
-
-```markdown
----
-jobTitle: Your Job Title
-company: Company Name
-location: City, State
-startDate: 2024-01-01
-endDate: 2024-12-31 # Optional - omit for current position
-summary: Brief summary of your role
-tags:
-  - React
-  - TypeScript
-  - Web Development
 ---
 
-Detailed description of your responsibilities and achievements...
-```
+## Tech Stack
 
-## Adding Education
+- **Framework**: [TanStack Start](https://tanstack.com/router/latest/docs/framework/react/start/overview) (Full-stack React with Vite)
+- **Database (TanStack DB)**: [Neon](https://neon.tech/) (PostgreSQL) using [Drizzle ORM](https://orm.drizzle.tech/) for schema-first data management and TanStack's server-side data fetching patterns.
+- **AI Integration (TanStack AI)**: [Vercel AI SDK v6](https://sdk.vercel.ai/) & [OpenRouter](https://openrouter.ai/), integrated via TanStack Start server functions for real-time streaming and tool execution.
+- **Styling**: Tailwind CSS v4 (Modern, utility-first)
+- **Deployment**: [Netlify](https://www.netlify.com/) (Serverless Functions)
+- **Auth**: Secure cookie-based session management with JWT and database persistence.
 
-Create a new markdown file in `content/education/`:
-
-```markdown
----
-school: School Name
-summary: Degree or Program Name
-startDate: 2020-01-01
-endDate: 2024-01-01
-tags:
-  - Relevant
-  - Skills
 ---
 
-Details about your education...
-```
+## Authentication & Security
 
-## Development
+VibeKit Studio implements a robust, production-grade authentication system:
+- **Cookie-based Sessions**: Uses a secure `refreshToken` cookie to maintain user sessions without exposing tokens to client-side JavaScript.
+- **JWT (JSON Web Tokens)**: Tokens are signed using a server-side `JWT_SECRET`. The system generates a 7-day refresh token upon login.
+- **Database-backed Persistence**: Every active session is logged in the `sessions` table in PostgreSQL. This allows for centralized session management and secure revocation.
+- **Security Headers**:
+  - `httpOnly`: Prevents Cross-Site Scripting (XSS) by making cookies inaccessible to `document.cookie`.
+  - `Secure`: Ensures cookies are only sent over HTTPS in production.
+  - `SameSite: Strict`: Protects against Cross-Site Request Forgery (CSRF).
+- **Password Protection**: All passwords are encrypted using `bcryptjs` with a secure salt before storage.
 
-```bash
-# Start development server
-npm run dev
+---
 
-# Build for production
-npm run build
-```
+## Local Setup
 
-## Routing
+1. **Clone the repository**:
+   ```bash
+   git clone <repo-url>
+   cd vite-project
+   ```
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-### Adding A Route
+3. **Configure Environment Variables**:
+   Create a `.env.local` file:
+   ```env
+   DATABASE_URL=postgres://user:pass@host/db
+   JWT_SECRET=your_super_secret_key
+   OPENROUTER_API_KEY=your_openrouter_key
+   ```
 
-To add a new route to your application just add a new file in the `./src/routes` directory.
+4. **Run in development**:
+   ```bash
+   npm run dev
+   ```
 
-TanStack will automatically generate the content of the route file for you.
+5. **Build for production**:
+   ```bash
+   npm run build
+   ```
 
-Now that you have two routes you can use a `Link` component to navigate between them.
+---
 
-### Adding Links
+## Tradeoffs & Future Fixes
 
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
+1. **`srcDoc` Preview**: Currently renders the page in an `iframe` using `srcDoc`. This ensures perfect rendering isolation but causes a full reload on every state change. **Next Step**: Implement a message-based partial update system between parent and iframe.
+2. **AI SDK v6 Migration**: The rapid migration to SDK v6 used some `as any` types to bypass complex union type overlaps during the streaming response setup. **Next Step**: Fully type the part-based message structure.
+3. **Asset Storage**: Gallery images currently use external URLs. **Next Step**: Integrate a cloud storage solution like Uploadthing or Cloudinary for local image uploads.
+4. **Drag-and-Drop**: Section reordering is handled via buttons or the AI. **Next Step**: Add [dnd-kit] for a more tactile drag-and-drop experience.
+5. **E2E Testing**: No automated visual testing currently exists. **Next Step**: Add Playwright tests to verify that the generated HTML matches the vibey CSS tokens across all 6 archetypes.
 
-```tsx
-import { Link } from '@tanstack/react-router'
-```
+---
 
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+## 👤 Test User
+- **Email**: `test@gmail.com`
+- **Password**: `password123`
+*(Or feel free to sign up!)*
