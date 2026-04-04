@@ -87,6 +87,16 @@ export interface PageRenderData {
   updatedAt?: string | Date
 }
 
+export interface ContactSubmission {
+  id: string
+  pageId: string
+  name: string
+  email: string
+  message: string
+  createdAt: string | Date
+  read: boolean
+}
+
 // Block Props
 export interface HeroProps extends HeroSection {
   className?: string

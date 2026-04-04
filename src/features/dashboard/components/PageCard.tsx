@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Card, CardContent } from '#/components/ui/card'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
-import { ExternalLink, Copy, Edit, Loader2 } from 'lucide-react'
+import { ExternalLink, Copy, Edit, Loader2, Mail } from 'lucide-react'
+import { ContactSubmissionsModal } from './ContactSubmissionsModal'
 
 const THEMES: Record<string, { label: string; color: string }> = {
   minimal: { label: 'Minimal', color: '#1a1a1a' },
@@ -16,6 +18,8 @@ const THEMES: Record<string, { label: string; color: string }> = {
 import type { PageCardProps } from '#/types'
 
 export function PageCard({ page, onDuplicate, isDuplicating }: PageCardProps) {
+  const [showSubmissions, setShowSubmissions] = useState(false)
+
   return (
     <Card className="overflow-hidden bg-card border-border shadow-sm">
       <CardContent className="p-6">
@@ -63,18 +67,37 @@ export function PageCard({ page, onDuplicate, isDuplicating }: PageCardProps) {
           </Button>
 
           {page.status === 'published' && (
-            <Button asChild variant="outline" size="icon" className="h-9 w-9">
-              <a
-                href={`/p/${page.slug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="View published page"
+            <>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 bg-primary/5 hover:bg-primary/10 border-primary/20 text-primary"
+                onClick={() => setShowSubmissions(true)}
+                title="View messages"
               >
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            </Button>
+                <Mail className="w-4 h-4" />
+              </Button>
+
+              <Button asChild variant="outline" size="icon" className="h-9 w-9">
+                <a
+                  href={`/p/${page.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="View published page"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </Button>
+            </>
           )}
         </div>
+
+        <ContactSubmissionsModal
+          pageId={page.id}
+          pageTitle={page.title}
+          open={showSubmissions}
+          onOpenChange={setShowSubmissions}
+        />
       </CardContent>
     </Card>
   )

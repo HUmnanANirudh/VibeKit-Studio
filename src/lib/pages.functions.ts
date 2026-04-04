@@ -2,10 +2,10 @@ import { createServerFn } from '@tanstack/react-start'
 import { getRequest } from '@tanstack/react-start/server'
 import { getDb } from '../db/index'
 import { getSessionUser } from './session.server'
-import { pages } from '../db/schema'
-import { eq, and } from 'drizzle-orm'
+import { pages, contactSubmissions, pageViews } from '../db/schema'
+import { eq, and, sql } from 'drizzle-orm'
 import { z } from 'zod'
-import type { PageRenderData } from '#/types'
+import type { PageRenderData, ContactSubmission } from '#/types'
 
 const isUuid = (val: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val)
 const getIdentifier = (id: string) => isUuid(id) ? eq(pages.id, id) : eq(pages.slug, id.replace('.themely.site', ''))
@@ -166,4 +166,79 @@ export const publishPage = createServerFn({ method: 'POST' })
       .returning()
 
     return updated as unknown as PageRenderData
+  })
+
+export const incrementViewCount = createServerFn({ method: 'POST' })
+  .inputValidator(z.string())
+  .handler(async ({ data: id }) => {
+    const db = getDb()
+    const request = getRequest()
+    const userAgent = request?.headers.get('user-agent')
+    const referer = request?.headers.get('referer')
+
+    // 1. Increment the atomic counter on the page
+    await db
+      .update(pages)
+      .set({ viewCount: sql`${pages.viewCount} + 1` })
+      .where(getIdentifier(id))
+
+    // 2. Log the detailed view
+    const [page] = await db
+      .select({ id: pages.id })
+      .from(pages)
+      .where(getIdentifier(id))
+      .limit(1)
+
+    if (page) {
+      await db.insert(pageViews).values({
+        pageId: page.id,
+        userAgent,
+        referer,
+      })
+    }
+
+    return { success: true }
+  })
+
+export const submitContactForm = createServerFn({ method: 'POST' })
+  .inputValidator(
+    z.object({
+      slug: z.string(),
+      name: z.string().min(1),
+      email: z.string().email(),
+      message: z.string().min(1),
+    })
+  )
+  .handler(async ({ data }) => {
+    const db = getDb()
+    const [page] = await db
+      .select({ id: pages.id })
+      .from(pages)
+      .where(eq(pages.slug, data.slug))
+      .limit(1)
+
+    if (!page) throw new Error('Page not found')
+
+    await db.insert(contactSubmissions).values({
+      pageId: page.id,
+      name: data.name,
+      email: data.email,
+      message: data.message,
+    })
+
+    return { success: true }
+  })
+
+export const getContactSubmissions = createServerFn({ method: 'GET' })
+  .inputValidator(z.string())
+  .handler(async ({ data: pageId }) => {
+    await requireAuth()
+    const db = getDb()
+    const results = await db
+      .select()
+      .from(contactSubmissions)
+      .where(eq(contactSubmissions.pageId, pageId))
+      .orderBy(sql`${contactSubmissions.createdAt} DESC`)
+
+    return results as unknown as ContactSubmission[]
   })

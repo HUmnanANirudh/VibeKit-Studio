@@ -353,7 +353,66 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
   ${sectionsHTML}
   <script>
     const interactions = ${JSON.stringify(interactions || {})};
-    // Apply basic interactions (example: adding classes or styles)
+    const pageId = ${JSON.stringify(page.id)};
+    const pageSlug = ${JSON.stringify(page.slug)};
+
+    // 1. Track View/Click on Load
+    fetch('/api/analytics/click', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: pageId })
+    }).catch(console.error);
+
+    // 2. Handle Contact Form
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = contactForm.querySelector('button[type="submit"]');
+        const originalText = btn.innerText;
+        btn.innerText = 'Sending...';
+        btn.disabled = true;
+
+        const formData = {
+          slug: pageSlug,
+          name: contactForm.querySelector('input[type="text"]').value,
+          email: contactForm.querySelector('input[type="email"]').value,
+          message: contactForm.querySelector('textarea').value,
+        };
+
+        try {
+          const res = await fetch('/api/contact/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          });
+
+          if (res.ok) {
+            btn.innerText = 'Success!';
+            btn.style.background = '#10b981';
+            contactForm.reset();
+            setTimeout(() => {
+              btn.innerText = originalText;
+              btn.disabled = false;
+              btn.style.background = '';
+            }, 3000);
+          } else {
+            throw new Error('Failed to submit');
+          }
+        } catch (err) {
+          console.error(err);
+          btn.innerText = 'Error! Try again';
+          btn.style.background = '#ef4444';
+          setTimeout(() => {
+            btn.innerText = originalText;
+            btn.disabled = false;
+            btn.style.background = '';
+          }, 3000);
+        }
+      });
+    }
+
+    // 3. Animations
     if (interactions.animations === 'fade') {
       document.querySelectorAll('.reveal').forEach(el => el.classList.add('animate-fade'));
     }

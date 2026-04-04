@@ -17,10 +17,12 @@ import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as ApiAssistantRouteImport } from './routes/api/assistant'
 import { Route as AppPagesIdRouteImport } from './routes/app/pages/$id'
+import { Route as ApiContactSubmitRouteImport } from './routes/api/contact/submit'
 import { Route as ApiAuthSignupRouteImport } from './routes/api/auth/signup'
 import { Route as ApiAuthRefreshRouteImport } from './routes/api/auth/refresh'
 import { Route as ApiAuthLogoutRouteImport } from './routes/api/auth/logout'
 import { Route as ApiAuthLoginRouteImport } from './routes/api/auth/login'
+import { Route as ApiAnalyticsClickRouteImport } from './routes/api/analytics/click'
 
 const AppRoute = AppRouteImport.update({
   id: '/app',
@@ -62,6 +64,11 @@ const AppPagesIdRoute = AppPagesIdRouteImport.update({
   path: '/pages/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const ApiContactSubmitRoute = ApiContactSubmitRouteImport.update({
+  id: '/api/contact/submit',
+  path: '/api/contact/submit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSignupRoute = ApiAuthSignupRouteImport.update({
   id: '/api/auth/signup',
   path: '/api/auth/signup',
@@ -82,6 +89,11 @@ const ApiAuthLoginRoute = ApiAuthLoginRouteImport.update({
   path: '/api/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAnalyticsClickRoute = ApiAnalyticsClickRouteImport.update({
+  id: '/api/analytics/click',
+  path: '/api/analytics/click',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -91,10 +103,12 @@ export interface FileRoutesByFullPath {
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
   '/app/': typeof AppIndexRoute
+  '/api/analytics/click': typeof ApiAnalyticsClickRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/auth/refresh': typeof ApiAuthRefreshRoute
   '/api/auth/signup': typeof ApiAuthSignupRoute
+  '/api/contact/submit': typeof ApiContactSubmitRoute
   '/app/pages/$id': typeof AppPagesIdRoute
 }
 export interface FileRoutesByTo {
@@ -104,10 +118,12 @@ export interface FileRoutesByTo {
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
   '/app': typeof AppIndexRoute
+  '/api/analytics/click': typeof ApiAnalyticsClickRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/auth/refresh': typeof ApiAuthRefreshRoute
   '/api/auth/signup': typeof ApiAuthSignupRoute
+  '/api/contact/submit': typeof ApiContactSubmitRoute
   '/app/pages/$id': typeof AppPagesIdRoute
 }
 export interface FileRoutesById {
@@ -119,10 +135,12 @@ export interface FileRoutesById {
   '/auth/signup': typeof AuthSignupRoute
   '/p/$slug': typeof PSlugRoute
   '/app/': typeof AppIndexRoute
+  '/api/analytics/click': typeof ApiAnalyticsClickRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/auth/refresh': typeof ApiAuthRefreshRoute
   '/api/auth/signup': typeof ApiAuthSignupRoute
+  '/api/contact/submit': typeof ApiContactSubmitRoute
   '/app/pages/$id': typeof AppPagesIdRoute
 }
 export interface FileRouteTypes {
@@ -135,10 +153,12 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/p/$slug'
     | '/app/'
+    | '/api/analytics/click'
     | '/api/auth/login'
     | '/api/auth/logout'
     | '/api/auth/refresh'
     | '/api/auth/signup'
+    | '/api/contact/submit'
     | '/app/pages/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -148,10 +168,12 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/p/$slug'
     | '/app'
+    | '/api/analytics/click'
     | '/api/auth/login'
     | '/api/auth/logout'
     | '/api/auth/refresh'
     | '/api/auth/signup'
+    | '/api/contact/submit'
     | '/app/pages/$id'
   id:
     | '__root__'
@@ -162,10 +184,12 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/p/$slug'
     | '/app/'
+    | '/api/analytics/click'
     | '/api/auth/login'
     | '/api/auth/logout'
     | '/api/auth/refresh'
     | '/api/auth/signup'
+    | '/api/contact/submit'
     | '/app/pages/$id'
   fileRoutesById: FileRoutesById
 }
@@ -176,10 +200,12 @@ export interface RootRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
   PSlugRoute: typeof PSlugRoute
+  ApiAnalyticsClickRoute: typeof ApiAnalyticsClickRoute
   ApiAuthLoginRoute: typeof ApiAuthLoginRoute
   ApiAuthLogoutRoute: typeof ApiAuthLogoutRoute
   ApiAuthRefreshRoute: typeof ApiAuthRefreshRoute
   ApiAuthSignupRoute: typeof ApiAuthSignupRoute
+  ApiContactSubmitRoute: typeof ApiContactSubmitRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -240,6 +266,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPagesIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/api/contact/submit': {
+      id: '/api/contact/submit'
+      path: '/api/contact/submit'
+      fullPath: '/api/contact/submit'
+      preLoaderRoute: typeof ApiContactSubmitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/signup': {
       id: '/api/auth/signup'
       path: '/api/auth/signup'
@@ -268,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/analytics/click': {
+      id: '/api/analytics/click'
+      path: '/api/analytics/click'
+      fullPath: '/api/analytics/click'
+      preLoaderRoute: typeof ApiAnalyticsClickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -290,10 +330,12 @@ const rootRouteChildren: RootRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthSignupRoute: AuthSignupRoute,
   PSlugRoute: PSlugRoute,
+  ApiAnalyticsClickRoute: ApiAnalyticsClickRoute,
   ApiAuthLoginRoute: ApiAuthLoginRoute,
   ApiAuthLogoutRoute: ApiAuthLogoutRoute,
   ApiAuthRefreshRoute: ApiAuthRefreshRoute,
   ApiAuthSignupRoute: ApiAuthSignupRoute,
+  ApiContactSubmitRoute: ApiContactSubmitRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
