@@ -136,7 +136,7 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
 
   const renderBlock = (block: any): string => {
     const childrenHTML = block.children ? block.children.map(renderBlock).join('\n') : ''
-    
+
     switch (block.type) {
       case 'Section':
         return `
@@ -182,15 +182,15 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
               <h2 class="section-heading">Features</h2>
               <div class="features-grid">
                 ${(block.props.items || [])
-                  .map(
-                    (f: any) => `
+            .map(
+              (f: any) => `
                   <div class="feature-card card">
                     <div class="feature-icon">✦</div>
                     <h3 class="font-bold mb-2">${f.title}</h3>
                     <p class="text-sm opacity-80">${f.description}</p>
                   </div>`,
-                  )
-                  .join('')}
+            )
+            .join('')}
               </div>
             </div>
           </section>`
@@ -201,13 +201,13 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
               <h2 class="section-heading">Gallery</h2>
               <div class="gallery-grid mt-12">
                 ${(block.props.images || [])
-                  .map(
-                    (img: any) => `
+            .map(
+              (img: any) => `
                   <div class="gallery-item">
                     <img src="${img.url}" alt="${img.alt || ''}" class="w-full h-full object-cover" loading="lazy" />
                   </div>`,
-                  )
-                  .join('')}
+            )
+            .join('')}
               </div>
             </div>
           </section>`
@@ -241,8 +241,10 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
 
   const sectionsHTML = blocks.map(renderBlock).join('\n')
 
+  const activeTheme = (themeTokens as any)?.archetype ? (themeTokens as any).archetype.toLowerCase() : theme;
+
   return `<!DOCTYPE html>
-<html lang="en" data-theme="${theme}">
+<html lang="en" data-theme="${activeTheme}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -317,12 +319,18 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
     .hero-title { font-size: clamp(2.5rem, 8vw, 5rem); margin-bottom: 1.5rem; letter-spacing: -0.03em; }
     .hero-subtitle { font-size: clamp(1.1rem, 2vw, 1.25rem); margin-bottom: 2.5rem; opacity: 0.8; max-width: 700px; margin-left: auto; margin-right: auto; }
     
-    .gallery-item { aspect-ratio: 1; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); }
-    .gallery-item img { transition: transform 0.5s ease; }
+    .section-heading { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 3rem; text-align: center; }
+    .section-subheading { margin-bottom: 3rem; text-align: center; font-size: 1.2rem; opacity: 0.8; }
+    
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+    .feature-icon { font-size: 2rem; margin-bottom: 1.5rem; color: var(--accent); }
+    
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .gallery-item { aspect-ratio: 1; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); position: relative; }
+    .gallery-item img { transition: transform 0.5s ease; width: 100%; height: 100%; object-fit: cover; }
     .gallery-item:hover img { transform: scale(1.1); }
     
-    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0,0,0.2,1); }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal { opacity: 1; transition: all 0.8s cubic-bezier(0,0,0.2,1); }
 
     /* Theme Specific Overrides */
     [data-theme="neo-brutal"] .btn:active, [data-theme="retro-pixel"] .btn:active { transform: translate(2px, 2px); box-shadow: none; }

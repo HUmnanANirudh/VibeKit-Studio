@@ -68,6 +68,11 @@ export function useVibeAssistant({ id, onUpdate }: AssistantOptions) {
     async (text: string, options?: { model?: string; mode?: string; theme?: string }) => {
       console.log('Sending AI message via sendMessage:', { text, id, ...options });
       try {
+        if (options?.theme) {
+          // Optimistically update the UI and save to database instantly
+          onUpdate({ themeTokens: { archetype: options.theme } } as any);
+        }
+
         if (typeof chatSendMessage === 'function') {
           // Use the more explicit parts structure for maximum compatibility
           await chatSendMessage({

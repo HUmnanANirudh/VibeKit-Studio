@@ -36,11 +36,12 @@ export const Route = createFileRoute('/api/assistant')({
               ...(vibeAgent.tools as any).updatePage,
               execute: async (args: any) => {
                 console.log('API Executing updatePage for user:', user.id);
-                return await internalUpdatePage(args.id, user.id, {
-                  themeTokens: args.themeTokens || {},
-                  content: args.content,
-                  interactions: args.interactions || {},
-                });
+                const updates: any = {};
+                if (args.themeTokens !== undefined) updates.themeTokens = args.themeTokens;
+                if (args.content !== undefined) updates.content = args.content;
+                if (args.interactions !== undefined) updates.interactions = args.interactions;
+                
+                return await internalUpdatePage(args.id, user.id, updates);
               }
             },
           },

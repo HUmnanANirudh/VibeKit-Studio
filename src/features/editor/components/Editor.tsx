@@ -61,8 +61,10 @@ export function Editor({ id }: EditorProps) {
   const { messages, sendMessage, status, stop, error } = useVibeAssistant({
     id,
     onUpdate: (updatedPage) => {
-      setPage(updatedPage)
-      saveMutation.mutate(updatedPage)
+      // Remove undefined properties before merging to prevent overwriting existing state
+      const cleanUpdate = Object.fromEntries(Object.entries(updatedPage).filter(([_, v]) => v !== undefined))
+      setPage((prev) => ({ ...prev, ...cleanUpdate }))
+      saveMutation.mutate(cleanUpdate)
     },
   })
 
