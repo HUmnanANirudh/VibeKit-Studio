@@ -1,5 +1,5 @@
 [build]
-  command = "vite build"
+  command = "npm install --include=dev && npm run build"
   publish = "dist/client"
 
 [dev]
@@ -12,7 +12,7 @@
   from = "/api/auth/*"
   to = "/.netlify/functions/auth"
   status = 200
-
+  
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
