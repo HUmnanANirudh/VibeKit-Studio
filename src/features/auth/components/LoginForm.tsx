@@ -13,7 +13,8 @@ import {
 } from '#/components/ui/form'
 import { AuthForm } from './AuthForm'
 import { useAuthMutations } from '../hooks/useAuthMutations'
-import { loginSchema, type LoginFormValues } from '../schemas/auth'
+import { loginSchema } from '../schemas/auth'
+import type { LoginFormValues } from '../schemas/auth'
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)

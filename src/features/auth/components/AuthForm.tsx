@@ -26,13 +26,13 @@ export function AuthForm({
 }: AuthFormProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 animate-fade-in-up">
-      <Card className="w-full max-w-[400px] shadow-xl border-border/50">
+      <Card className="w-full max-w-100 shadow-xl border-border/50">
         <CardHeader className="space-y-1 text-center">
           <Link
             to="/"
             className="text-3xl font-black italic tracking-tighter mb-6 block"
           >
-            THEMEL<span className="text-accent italic">Y</span>
+           VIBE<span className="text-accent italic">KIT</span>
           </Link>
           <CardTitle className="text-2xl">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
