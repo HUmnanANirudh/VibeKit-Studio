@@ -32,7 +32,7 @@ export function SignupForm() {
   return (
     <AuthForm
       title="Create account"
-      description="Join Themely Studio and start building"
+      description="Join VibeKit Studio and start building"
       submitLabel="Create account"
       loadingLabel="Creating account..."
       loading={signupMutation.isPending}

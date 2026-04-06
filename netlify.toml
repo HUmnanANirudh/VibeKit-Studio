@@ -1,27 +1,20 @@
 [build]
   command = "npm install --include=dev && npm run build"
-  publish = "dist"
+  publish = "dist/client"
 
 [dev]
   command = "npm run dev"
   targetPort = 3000
   framework = "#custom"
 
-# API redirects to Netlify Functions
-[[redirects]]
-  from = "/api/auth/*"
-  to = "/.netlify/functions/auth"
-  status = 200
-
-# SPA fallback — all deep links return index.html
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/.netlify/functions/server"
   status = 200
 
 [functions]
-  directory = "netlify/functions"
   node_bundler = "esbuild"
+  included_files = ["dist/server/**"]
 
 [build.environment]
   NODE_VERSION = "20"
