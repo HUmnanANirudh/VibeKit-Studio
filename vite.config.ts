@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 const config = defineConfig({
   plugins: [
-    [devtoolsPlugin].filter(Boolean),
+    devtoolsPlugin,
     neon,
     contentCollections(),
     tsconfigPaths({ projects: ['./tsconfig.json'] }),
