@@ -5,7 +5,15 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
-import { ChevronLeft, Loader2, Monitor, PanelLeftClose, PanelLeftOpen, Smartphone, Tablet } from 'lucide-react'
+import {
+  ChevronLeft,
+  Loader2,
+  Monitor,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Smartphone,
+  Tablet,
+} from 'lucide-react'
 
 import { pageQueryOptions } from '#/lib/queries'
 import { updatePage } from '#/lib/pages.functions'
@@ -35,7 +43,9 @@ export function Editor({ id }: EditorProps) {
     'idle' | 'saving' | 'saved' | 'error'
   >('idle')
   const [isAIPanelCollapsed, setIsAIPanelCollapsed] = useState(false)
-  const [viewport, setViewport] = useState<'desktop' | 'tablet' | 'mobile'>('desktop')
+  const [viewport, setViewport] = useState<'desktop' | 'tablet' | 'mobile'>(
+    'desktop',
+  )
   const aiPanelRef = useRef<PanelImperativeHandle>(null)
 
   useEffect(() => {
@@ -63,7 +73,9 @@ export function Editor({ id }: EditorProps) {
     id,
     onUpdate: (updatedPage) => {
       // Remove undefined properties before merging to prevent overwriting existing state
-      const cleanUpdate = Object.fromEntries(Object.entries(updatedPage).filter(([_, v]) => v !== undefined))
+      const cleanUpdate = Object.fromEntries(
+        Object.entries(updatedPage).filter(([_, v]) => v !== undefined),
+      )
       setPage((prev) => ({ ...prev, ...cleanUpdate }))
       saveMutation.mutate(cleanUpdate)
     },
@@ -220,16 +232,17 @@ export function Editor({ id }: EditorProps) {
                     backgroundSize: '40px 40px',
                   }}
                 />
-                <div 
+                <div
                   className={cn(
-                    "mx-auto h-full overflow-hidden shadow-2xl transition-all duration-500 ease-in-out",
-                    viewport === 'desktop' && "w-full",
-                    viewport === 'tablet' && "w-[768px]",
-                    viewport === 'mobile' && "w-[375px]"
+                    'mx-auto h-full overflow-hidden shadow-2xl transition-all duration-500 ease-in-out',
+                    viewport === 'desktop' && 'w-full',
+                    viewport === 'tablet' && 'w-[768px]',
+                    viewport === 'mobile' && 'w-[375px]',
                   )}
                   style={{
                     borderRadius: viewport === 'desktop' ? '0' : '24px',
-                    border: viewport === 'desktop' ? 'none' : '8px solid #1a1a1a',
+                    border:
+                      viewport === 'desktop' ? 'none' : '8px solid #1a1a1a',
                   }}
                 >
                   <iframe

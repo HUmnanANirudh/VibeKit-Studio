@@ -60,12 +60,8 @@
           "name": "contact_submissions_page_id_pages_id_fk",
           "tableFrom": "contact_submissions",
           "tableTo": "pages",
-          "columnsFrom": [
-            "page_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["page_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -119,12 +115,8 @@
           "name": "page_views_page_id_pages_id_fk",
           "tableFrom": "page_views",
           "tableTo": "pages",
-          "columnsFrom": [
-            "page_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["page_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -247,12 +239,8 @@
           "name": "pages_user_id_users_id_fk",
           "tableFrom": "pages",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -262,9 +250,7 @@
         "pages_slug_unique": {
           "name": "pages_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -320,12 +306,8 @@
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -335,9 +317,7 @@
         "sessions_refresh_token_unique": {
           "name": "sessions_refresh_token_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "refresh_token"
-          ]
+          "columns": ["refresh_token"]
         }
       },
       "policies": {},
@@ -395,9 +375,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},

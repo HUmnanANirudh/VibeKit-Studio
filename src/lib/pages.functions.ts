@@ -7,8 +7,12 @@ import { eq, and, sql } from 'drizzle-orm'
 import { z } from 'zod'
 import type { PageRenderData, ContactSubmission } from '#/types'
 
-const isUuid = (val: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val)
-const getIdentifier = (id: string) => isUuid(id) ? eq(pages.id, id) : eq(pages.slug, id.replace('.themely.site', ''))
+const isUuid = (val: string) =>
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val)
+const getIdentifier = (id: string) =>
+  isUuid(id)
+    ? eq(pages.id, id)
+    : eq(pages.slug, id.replace('.themely.site', ''))
 
 async function requireAuth() {
   const request = getRequest()
@@ -18,17 +22,13 @@ async function requireAuth() {
   return user
 }
 
-export const getPages = createServerFn({ method: 'GET' })
-  .handler(async () => {
-    const user = await requireAuth()
-    const db = getDb()
-    const results = await db
-      .select()
-      .from(pages)
-      .where(eq(pages.userId, user.id))
+export const getPages = createServerFn({ method: 'GET' }).handler(async () => {
+  const user = await requireAuth()
+  const db = getDb()
+  const results = await db.select().from(pages).where(eq(pages.userId, user.id))
 
-    return results as unknown as PageRenderData[]
-  })
+  return results as unknown as PageRenderData[]
+})
 
 export const getPage = createServerFn({ method: 'GET' })
   .inputValidator(z.string())
@@ -64,7 +64,7 @@ export const createPage = createServerFn({ method: 'POST' })
     z.object({
       title: z.string().min(1),
       theme: z.string().optional(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const user = await requireAuth()
@@ -90,14 +90,18 @@ export const updatePage = createServerFn({ method: 'POST' })
     z.object({
       id: z.string(),
       updates: z.any(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const user = await requireAuth()
     return await internalUpdatePage(data.id, user.id, data.updates)
   })
 
-export async function internalUpdatePage(id: string, userId: string, updates: any) {
+export async function internalUpdatePage(
+  id: string,
+  userId: string,
+  updates: any,
+) {
   const db = getDb()
   const [updated] = await db
     .update(pages)
@@ -150,7 +154,7 @@ export const publishPage = createServerFn({ method: 'POST' })
     z.object({
       id: z.string(),
       publish: z.boolean(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const user = await requireAuth()
@@ -207,7 +211,7 @@ export const submitContactForm = createServerFn({ method: 'POST' })
       name: z.string().min(1),
       email: z.string().email(),
       message: z.string().min(1),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const db = getDb()

@@ -115,10 +115,30 @@
   line-height: 1.6;
 }
 
-.tm-heading-1 { font-size: var(--h1); font-family: var(--font-heading); font-weight: 800; line-height: 1.1; margin-bottom: var(--spacing-4); }
-.tm-heading-2 { font-size: var(--h2); font-family: var(--font-heading); font-weight: 700; line-height: 1.2; margin-bottom: var(--spacing-4); }
-.tm-heading-3 { font-size: var(--h3); font-family: var(--font-heading); font-weight: 700; line-height: 1.3; margin-bottom: var(--spacing-3); }
-.tm-text-body { font-size: var(--body); }
+.tm-heading-1 {
+  font-size: var(--h1);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: var(--spacing-4);
+}
+.tm-heading-2 {
+  font-size: var(--h2);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-4);
+}
+.tm-heading-3 {
+  font-size: var(--h3);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: var(--spacing-3);
+}
+.tm-text-body {
+  font-size: var(--body);
+}
 
 .tm-btn {
   display: inline-flex;
@@ -160,7 +180,9 @@
   padding: var(--spacing-8);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .tm-card:hover {

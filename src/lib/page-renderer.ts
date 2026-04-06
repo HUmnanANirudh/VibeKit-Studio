@@ -117,25 +117,30 @@ const THEME_TOKENS = `
 `
 
 export function generatePublishedPageHTML(page: PageRenderData): string {
-  const {
-    theme,
-    content,
-    title,
-    themeTokens,
-    interactions,
-  } = page
+  const { theme, content, title, themeTokens, interactions } = page
 
-  const dynamicStyles = themeTokens?.colors ? `
+  const dynamicStyles = themeTokens?.colors
+    ? `
     :root {
-      ${Object.entries(themeTokens.colors).map(([k, v]) => `--${k.replace(/[A-Z]/g, m => '-' + m.toLowerCase())}: ${v};`).join('\n')}
+      ${Object.entries(themeTokens.colors)
+        .map(
+          ([k, v]) =>
+            `--${k.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())}: ${v};`,
+        )
+        .join('\n')}
     }
-  ` : '';
+  `
+    : ''
 
   // If content is an object with blocks, use those, otherwise use content as array
-  const blocks = Array.isArray(content) ? content : (content as any)?.blocks || []
+  const blocks = Array.isArray(content)
+    ? content
+    : (content as any)?.blocks || []
 
   const renderBlock = (block: any): string => {
-    const childrenHTML = block.children ? block.children.map(renderBlock).join('\n') : ''
+    const childrenHTML = block.children
+      ? block.children.map(renderBlock).join('\n')
+      : ''
 
     switch (block.type) {
       case 'Section':
@@ -182,15 +187,15 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
               <h2 class="section-heading">Features</h2>
               <div class="features-grid">
                 ${(block.props.items || [])
-            .map(
-              (f: any) => `
+                  .map(
+                    (f: any) => `
                   <div class="feature-card card">
                     <div class="feature-icon">✦</div>
                     <h3 class="font-bold mb-2">${f.title}</h3>
                     <p class="text-sm opacity-80">${f.description}</p>
                   </div>`,
-            )
-            .join('')}
+                  )
+                  .join('')}
               </div>
             </div>
           </section>`
@@ -201,13 +206,13 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
               <h2 class="section-heading">Gallery</h2>
               <div class="gallery-grid mt-12">
                 ${(block.props.images || [])
-            .map(
-              (img: any) => `
+                  .map(
+                    (img: any) => `
                   <div class="gallery-item">
                     <img src="${img.url}" alt="${img.alt || ''}" class="w-full h-full object-cover" loading="lazy" />
                   </div>`,
-            )
-            .join('')}
+                  )
+                  .join('')}
               </div>
             </div>
           </section>`
@@ -241,7 +246,9 @@ export function generatePublishedPageHTML(page: PageRenderData): string {
 
   const sectionsHTML = blocks.map(renderBlock).join('\n')
 
-  const activeTheme = (themeTokens as any)?.archetype ? (themeTokens as any).archetype.toLowerCase() : theme;
+  const activeTheme = (themeTokens as any)?.archetype
+    ? (themeTokens as any).archetype.toLowerCase()
+    : theme
 
   return `<!DOCTYPE html>
 <html lang="en" data-theme="${activeTheme}">

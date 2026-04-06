@@ -32,7 +32,7 @@ export function AuthForm({
             to="/"
             className="text-3xl font-black italic tracking-tighter mb-6 block"
           >
-           VIBE<span className="text-accent italic">KIT</span>
+            VIBE<span className="text-accent italic">KIT</span>
           </Link>
           <CardTitle className="text-2xl">{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
@@ -43,11 +43,11 @@ export function AuthForm({
               <AlertCircle className="h-4 w-4" /> {error}
             </div>
           )}
-          
+
           {form ? (
             <Form {...form}>
-              <form 
-                onSubmit={form.handleSubmit(onSubmit)} 
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
                 noValidate
               >
@@ -59,11 +59,11 @@ export function AuthForm({
               </form>
             </Form>
           ) : (
-            <form 
+            <form
               onSubmit={(e) => {
                 e.preventDefault()
                 onSubmit(e)
-              }} 
+              }}
               className="space-y-4"
               noValidate
             >
@@ -75,9 +75,7 @@ export function AuthForm({
             </form>
           )}
         </CardContent>
-        <CardFooter className="flex justify-center">
-          {footer}
-        </CardFooter>
+        <CardFooter className="flex justify-center">{footer}</CardFooter>
       </Card>
     </div>
   )

@@ -15,10 +15,7 @@ export class AuthRepository {
 
   async createUser(data: NewUser): Promise<User> {
     const db = getDb()
-    const [user] = await db
-      .insert(users)
-      .values(data)
-      .returning()
+    const [user] = await db.insert(users).values(data).returning()
     return user
   }
 
@@ -33,7 +30,9 @@ export class AuthRepository {
 
   async deleteSession(refreshToken: string) {
     const db = getDb()
-    return await db.delete(sessions).where(eq(sessions.refreshToken, refreshToken))
+    return await db
+      .delete(sessions)
+      .where(eq(sessions.refreshToken, refreshToken))
   }
 
   async getSessionByToken(refreshToken: string) {

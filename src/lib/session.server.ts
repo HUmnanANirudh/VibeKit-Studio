@@ -7,7 +7,7 @@ export async function getSessionUser(request: Request) {
   try {
     const cookies = parseCookies(request)
     const refreshToken = cookies.refreshToken
-    
+
     if (!refreshToken) return null
 
     const payload = verifyToken(refreshToken)
@@ -20,7 +20,8 @@ export async function getSessionUser(request: Request) {
       .where(eq(sessions.refreshToken, refreshToken))
       .limit(1)
 
-    if (!session || new Date(session.expiresAt).getTime() < Date.now()) return null
+    if (!session || new Date(session.expiresAt).getTime() < Date.now())
+      return null
 
     const [user] = await db
       .select()

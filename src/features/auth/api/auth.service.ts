@@ -18,7 +18,10 @@ export class AuthService {
       throw new Error('Invalid credentials')
     }
 
-    const { accessToken, refreshToken } = await this.createTokensAndSession(user.id, user.email)
+    const { accessToken, refreshToken } = await this.createTokensAndSession(
+      user.id,
+      user.email,
+    )
 
     return {
       user: { id: user.id, email: user.email, name: user.name },
@@ -37,7 +40,10 @@ export class AuthService {
         name,
       })
 
-      const { accessToken, refreshToken } = await this.createTokensAndSession(user.id, user.email)
+      const { accessToken, refreshToken } = await this.createTokensAndSession(
+        user.id,
+        user.email,
+      )
 
       return {
         user: { id: user.id, email: user.email, name: user.name },
@@ -91,7 +97,7 @@ export class AuthService {
     await this.repository.createSession(
       userId,
       refreshToken,
-      new Date(Date.now() + SEVEN_DAYS_MS)
+      new Date(Date.now() + SEVEN_DAYS_MS),
     )
 
     return { accessToken, refreshToken, userId, email }

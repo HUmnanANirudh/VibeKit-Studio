@@ -1,5 +1,11 @@
 import { useCallback, useState } from 'react'
-import { AlertCircle, ChevronDown, Loader2, Palette, Sparkles } from 'lucide-react'
+import {
+  AlertCircle,
+  ChevronDown,
+  Loader2,
+  Palette,
+  Sparkles,
+} from 'lucide-react'
 import {
   Conversation,
   ConversationContent,
@@ -37,7 +43,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#/components/ui/select'
-
 
 const MODELS = [
   'openrouter/auto',
@@ -88,7 +93,8 @@ export function AIPanel({
 
   const handleSendMessage = useCallback(
     async (promptMessage: any) => {
-      const text = typeof promptMessage === 'string' ? promptMessage : promptMessage.text
+      const text =
+        typeof promptMessage === 'string' ? promptMessage : promptMessage.text
       if (!text || isGenerating) return
       await sendMessage(text, { model: selectedModel, theme: selectedTheme })
     },
@@ -154,9 +160,24 @@ export function AIPanel({
           <div className="flex items-center gap-2">
             <ModelSelector>
               <ModelSelectorTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 flex-1 gap-2 rounded-lg px-3 text-[10px] font-bold uppercase tracking-wider">
-                  <ModelSelectorLogo provider={selectedModel.includes('/') ? selectedModel.split('/')[0] : 'openrouter'} className="size-3" />
-                  <ModelSelectorName className="max-w-[100px] text-left">{selectedModel.includes('/') ? selectedModel.split('/')[1] : selectedModel}</ModelSelectorName>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 flex-1 gap-2 rounded-lg px-3 text-[10px] font-bold uppercase tracking-wider"
+                >
+                  <ModelSelectorLogo
+                    provider={
+                      selectedModel.includes('/')
+                        ? selectedModel.split('/')[0]
+                        : 'openrouter'
+                    }
+                    className="size-3"
+                  />
+                  <ModelSelectorName className="max-w-[100px] text-left">
+                    {selectedModel.includes('/')
+                      ? selectedModel.split('/')[1]
+                      : selectedModel}
+                  </ModelSelectorName>
                   <ChevronDown className="size-3 opacity-50" />
                 </Button>
               </ModelSelectorTrigger>
@@ -165,8 +186,17 @@ export function AIPanel({
                 <ModelSelectorList className="max-h-[300px]">
                   <ModelSelectorGroup heading="Models">
                     {MODELS.map((model) => (
-                      <ModelSelectorItem key={model} onSelect={() => setSelectedModel(model)}>
-                        <ModelSelectorLogo provider={model.includes('/') ? model.split('/')[0] : 'openrouter'} />
+                      <ModelSelectorItem
+                        key={model}
+                        onSelect={() => setSelectedModel(model)}
+                      >
+                        <ModelSelectorLogo
+                          provider={
+                            model.includes('/')
+                              ? model.split('/')[0]
+                              : 'openrouter'
+                          }
+                        />
                         <ModelSelectorName>{model}</ModelSelectorName>
                       </ModelSelectorItem>
                     ))}
@@ -176,7 +206,10 @@ export function AIPanel({
             </ModelSelector>
 
             <Select value={selectedTheme} onValueChange={setSelectedTheme}>
-              <SelectTrigger size="sm" className="h-8 flex-1 gap-2 rounded-lg px-3 text-[10px] font-bold uppercase tracking-wider">
+              <SelectTrigger
+                size="sm"
+                className="h-8 flex-1 gap-2 rounded-lg px-3 text-[10px] font-bold uppercase tracking-wider"
+              >
                 <Palette className="size-3" />
                 <SelectValue placeholder="Theme" />
               </SelectTrigger>

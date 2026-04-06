@@ -11,7 +11,7 @@ export function getDb() {
     (typeof Netlify !== 'undefined'
       ? Netlify.env.get('DATABASE_URL')
       : process.env.DATABASE_URL) || ''
-  
+
   const sql = neon(url)
   return drizzle(sql, { schema })
 }

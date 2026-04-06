@@ -2,12 +2,32 @@ import { tool } from 'ai'
 import { z } from 'zod'
 import { defaultModel } from '#/lib/ai/openrouter'
 
-const BlockSchema: any = z.lazy(() => z.object({
-  type: z.string().describe('The name of the component (e.g., Section, Flex, Text, Button). MUST be an object with this field, NOT a string.'),
-  props: z.record(z.string(), z.any()).describe('The React props for this component. Example: { className: "p-4", content: "Hello" }'),
-  content: z.string().optional().describe('Inner text content for elements like h1, p, span, button.'),
-  children: z.array(BlockSchema).optional().describe('Nested child blocks for layout components like Section or Flex.'),
-}).describe('A recursive block object. NEVER return a string here.'));
+const BlockSchema: any = z.lazy(() =>
+  z
+    .object({
+      type: z
+        .string()
+        .describe(
+          'The name of the component (e.g., Section, Flex, Text, Button). MUST be an object with this field, NOT a string.',
+        ),
+      props: z
+        .record(z.string(), z.any())
+        .describe(
+          'The React props for this component. Example: { className: "p-4", content: "Hello" }',
+        ),
+      content: z
+        .string()
+        .optional()
+        .describe('Inner text content for elements like h1, p, span, button.'),
+      children: z
+        .array(BlockSchema)
+        .optional()
+        .describe(
+          'Nested child blocks for layout components like Section or Flex.',
+        ),
+    })
+    .describe('A recursive block object. NEVER return a string here.'),
+)
 
 export const vibeSystemPrompt = `You are the VibeKit AI Engine, a high-performance website architect.
 
@@ -90,22 +110,34 @@ You have access to the following components. Combine them to build complete web 
   ]
 }
 \`\`\`
-`;
+`
 
 export const vibeTools = {
   updatePage: tool({
-    description: 'Apply design system and block structure. Only use when requirements are CLEAR.',
+    description:
+      'Apply design system and block structure. Only use when requirements are CLEAR.',
     inputSchema: z.object({
       id: z.string().describe('The page ID to update'),
-      themeTokens: z.record(z.string(), z.any()).optional().describe('Design tokens object. Example: { archetype: "MINIMAL" }'),
-      content: z.array(BlockSchema).optional().describe('Array of block OBJECTS. Optional if only updating theme or interactions.'),
-      interactions: z.record(z.string(), z.any()).optional().describe('Global interactions'),
+      themeTokens: z
+        .record(z.string(), z.any())
+        .optional()
+        .describe('Design tokens object. Example: { archetype: "MINIMAL" }'),
+      content: z
+        .array(BlockSchema)
+        .optional()
+        .describe(
+          'Array of block OBJECTS. Optional if only updating theme or interactions.',
+        ),
+      interactions: z
+        .record(z.string(), z.any())
+        .optional()
+        .describe('Global interactions'),
     }),
   }),
-};
+}
 
 export const vibeAgent = {
   model: defaultModel,
   system: vibeSystemPrompt,
   tools: vibeTools,
-};
+}

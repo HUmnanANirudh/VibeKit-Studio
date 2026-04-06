@@ -9,20 +9,28 @@ export const Route = createFileRoute('/api/assistant')({
   server: {
     handlers: {
       GET: async () => {
-        return new Response(JSON.stringify({ status: 'ok', service: 'assistant' }), {
-          headers: { 'Content-Type': 'application/json' },
-        });
+        return new Response(
+          JSON.stringify({ status: 'ok', service: 'assistant' }),
+          {
+            headers: { 'Content-Type': 'application/json' },
+          },
+        )
       },
       POST: async ({ request }) => {
-        console.log('--- AI Assistant Request Start ---');
+        console.log('--- AI Assistant Request Start ---')
         const user = await getSessionUser(request)
         if (!user) {
-          console.warn('Unauthorized AI request');
-          return new Response('Unauthorized', { status: 401 });
+          console.warn('Unauthorized AI request')
+          return new Response('Unauthorized', { status: 401 })
         }
 
         const { messages, id, model, theme } = await request.json()
-        console.log('AI Assistant Params:', { id, model, theme, messageCount: messages?.length });
+        console.log('AI Assistant Params:', {
+          id,
+          model,
+          theme,
+          messageCount: messages?.length,
+        })
 
         if (!id) return new Response('Missing id', { status: 400 })
 
@@ -35,24 +43,26 @@ export const Route = createFileRoute('/api/assistant')({
             updatePage: {
               ...(vibeAgent.tools as any).updatePage,
               execute: async (args: any) => {
-                console.log('API Executing updatePage for user:', user.id);
-                const updates: any = {};
-                if (args.themeTokens !== undefined) updates.themeTokens = args.themeTokens;
-                if (args.content !== undefined) updates.content = args.content;
-                if (args.interactions !== undefined) updates.interactions = args.interactions;
-                
-                return await internalUpdatePage(args.id, user.id, updates);
-              }
+                console.log('API Executing updatePage for user:', user.id)
+                const updates: any = {}
+                if (args.themeTokens !== undefined)
+                  updates.themeTokens = args.themeTokens
+                if (args.content !== undefined) updates.content = args.content
+                if (args.interactions !== undefined)
+                  updates.interactions = args.interactions
+
+                return await internalUpdatePage(args.id, user.id, updates)
+              },
             },
           },
           system: `${vibeAgent.system}\n\nCURRENT CONTEXT:\nWebsite ID: ${id}${theme ? `\nTheme Preference: ${theme}` : ''}`,
         })
 
-        console.log('--- AI Assistant Request Streaming ---');
+        console.log('--- AI Assistant Request Streaming ---')
         return (result as any).toUIMessageStreamResponse({
           onError: (error: any) => {
-            console.error('AI Streaming Error:', error);
-            return error instanceof Error ? error.message : String(error);
+            console.error('AI Streaming Error:', error)
+            return error instanceof Error ? error.message : String(error)
           },
         })
       },

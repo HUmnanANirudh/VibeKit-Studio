@@ -28,5 +28,10 @@ export default async (req: Request, _context: any) => {
 }
 
 export const config: any = {
-  path: ['/api/auth/login', '/api/auth/signup', '/api/auth/logout', '/api/auth/refresh'],
+  path: [
+    '/api/auth/login',
+    '/api/auth/signup',
+    '/api/auth/logout',
+    '/api/auth/refresh',
+  ],
 }

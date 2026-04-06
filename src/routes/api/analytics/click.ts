@@ -8,7 +8,7 @@ export const Route = createFileRoute('/api/analytics/click')({
         try {
           const { id } = await request.json()
           if (!id) return new Response('Missing id', { status: 400 })
-          
+
           await incrementViewCount({ data: id })
           return new Response(JSON.stringify({ success: true }), {
             headers: { 'Content-Type': 'application/json' },

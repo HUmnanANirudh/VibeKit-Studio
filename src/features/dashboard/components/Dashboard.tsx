@@ -25,10 +25,16 @@ export function Dashboard() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { logoutMutation } = useAuthMutations()
-  const { data: pages = [] } = useSuspenseQuery(pagesQueryOptions) as { data: Page[] }
+  const { data: pages = [] } = useSuspenseQuery(pagesQueryOptions) as {
+    data: Page[]
+  }
   const [showNewModal, setShowNewModal] = useState(false)
 
-  const createMutation = useMutation<Page, Error, { title: string; theme: Theme }>({
+  const createMutation = useMutation<
+    Page,
+    Error,
+    { title: string; theme: Theme }
+  >({
     mutationFn: (data) => createPage({ data }),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: pagesQueryOptions.queryKey })
@@ -42,7 +48,6 @@ export function Dashboard() {
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: pagesQueryOptions.queryKey }),
   })
-
 
   const stats = [
     { label: 'Total Pages', value: pages.length, icon: Layout },
@@ -106,17 +111,24 @@ export function Dashboard() {
                 <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground/60">
                   {s.label}
                 </p>
-                <p className="mt-1 text-3xl font-black tracking-tight">{s.value}</p>
+                <p className="mt-1 text-3xl font-black tracking-tight">
+                  {s.value}
+                </p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mb-8 flex items-end justify-between border-b pb-6 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+        <div
+          className="mb-8 flex items-end justify-between border-b pb-6 animate-fade-in-up"
+          style={{ animationDelay: '400ms' }}
+        >
           <div>
-            <h2 className="text-3xl font-black tracking-tighter sm:text-4xl">Your Pages</h2>
+            <h2 className="text-3xl font-black tracking-tighter sm:text-4xl">
+              Your Pages
+            </h2>
           </div>
-          <Button 
+          <Button
             onClick={() => setShowNewModal(true)}
             className="h-11 rounded-full px-6 text-xs font-bold uppercase tracking-widest shadow-lg shadow-primary/20 transition-transform active:scale-95"
           >
@@ -125,15 +137,19 @@ export function Dashboard() {
         </div>
 
         {pages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed p-16 text-center bg-white shadow-sm mt-8 animate-fade-in-up" style={{ animationDelay: '500ms' }}>
+          <div
+            className="flex flex-col items-center justify-center rounded-3xl border border-dashed p-16 text-center bg-white shadow-sm mt-8 animate-fade-in-up"
+            style={{ animationDelay: '500ms' }}
+          >
             <div className="rounded-2xl bg-slate-50 p-6 mb-6">
               <Layout className="h-12 w-12 text-muted-foreground opacity-30" />
             </div>
             <h3 className="text-xl font-bold tracking-tight">No pages found</h3>
             <p className="text-muted-foreground mb-8 max-w-sm">
-              Ready to launch something beautiful? Start by building your first AI-themed page.
+              Ready to launch something beautiful? Start by building your first
+              AI-themed page.
             </p>
-            <Button 
+            <Button
               size="lg"
               onClick={() => setShowNewModal(true)}
               className="rounded-full px-8 text-xs font-bold uppercase tracking-widest shadow-xl shadow-primary/20"

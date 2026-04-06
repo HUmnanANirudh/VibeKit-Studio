@@ -1,4 +1,8 @@
-import { getCookieHeader, parseCookies, getClearCookieHeader } from '../../../lib/auth'
+import {
+  getCookieHeader,
+  parseCookies,
+  getClearCookieHeader,
+} from '../../../lib/auth'
 import { jsonResponse } from '../../../lib/utils'
 import { AuthService } from './auth.service'
 
@@ -13,13 +17,13 @@ export class AuthController {
       const cookie = getCookieHeader(
         'refreshToken',
         result.refreshToken,
-        this.service.getSevenDaysMs()
+        this.service.getSevenDaysMs(),
       )
 
       return jsonResponse(
         { user: result.user, accessToken: result.accessToken },
         200,
-        { 'Set-Cookie': cookie }
+        { 'Set-Cookie': cookie },
       )
     } catch (err: any) {
       if (err.message === 'Invalid credentials') {
@@ -38,13 +42,13 @@ export class AuthController {
       const cookie = getCookieHeader(
         'refreshToken',
         result.refreshToken,
-        this.service.getSevenDaysMs()
+        this.service.getSevenDaysMs(),
       )
 
       return jsonResponse(
         { user: result.user, accessToken: result.accessToken },
         201,
-        { 'Set-Cookie': cookie }
+        { 'Set-Cookie': cookie },
       )
     } catch (err: any) {
       if (err.message === 'User already exists') {
@@ -83,13 +87,16 @@ export class AuthController {
       const cookie = getCookieHeader(
         'refreshToken',
         result.refreshToken,
-        this.service.getSevenDaysMs()
+        this.service.getSevenDaysMs(),
       )
 
       return jsonResponse(
-        { accessToken: result.accessToken, user: { id: result.userId, email: result.email } },
+        {
+          accessToken: result.accessToken,
+          user: { id: result.userId, email: result.email },
+        },
         200,
-        { 'Set-Cookie': cookie }
+        { 'Set-Cookie': cookie },
       )
     } catch (err: any) {
       console.error('Refresh error:', err)

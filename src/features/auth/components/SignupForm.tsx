@@ -13,13 +13,13 @@ import {
 } from '#/components/ui/form'
 import { AuthForm } from './AuthForm'
 import { useAuthMutations } from '../hooks/useAuthMutations'
-import { signupSchema } from '../schemas/auth' 
-import type {SignupFormValues } from '../schemas/auth'
+import { signupSchema } from '../schemas/auth'
+import type { SignupFormValues } from '../schemas/auth'
 
 export function SignupForm() {
   const [showPassword, setShowPassword] = useState(false)
   const { signupMutation } = useAuthMutations()
-  
+
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: { name: '', email: '', password: '' },

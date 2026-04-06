@@ -17,21 +17,26 @@ export function NotFound() {
               VIBE<span className="text-primary italic">KIT</span> LOST
             </h2>
             <p className="text-lg text-muted-foreground max-w-md mx-auto sm:text-xl font-medium animate-fade-in-up [animation-delay:0.3s] opacity-0 [animation-fill-mode:forwards]">
-              Whatever vibe you're hunting for, it seems to have drifted into another dimension.
+              Whatever vibe you're hunting for, it seems to have drifted into
+              another dimension.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-fade-in-up [animation-delay:0.5s] opacity-0 [animation-fill-mode:forwards]">
-            <Button 
-              variant="outline" 
-              size="lg" 
-              onClick={() => window.history.back()} 
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => window.history.back()}
               className="rounded-full cursor-pointer px-8 text-base font-bold border-2 hover:bg-secondary/10 transition-all hover:-translate-x-1 active:scale-95"
             >
               <ArrowLeft className="mr-2 h-5 w-5" />
               Previous Page
             </Button>
-            <Button asChild size="lg" className="rounded-full px-8  text-base font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all hover:scale-105 active:scale-95">
+            <Button
+              asChild
+              size="lg"
+              className="rounded-full px-8  text-base font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all hover:scale-105 active:scale-95"
+            >
               <Link to="/">
                 <Home className="mr-2 h-5 w-5" />
                 Go Back Home

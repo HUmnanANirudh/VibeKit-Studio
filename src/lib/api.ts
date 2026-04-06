@@ -25,7 +25,7 @@ const isClient = typeof window !== 'undefined'
 
 export async function apiFetch(url: string, options: RequestInit = {}) {
   const headers = new Headers(options.headers || {})
-  
+
   if (accessToken && !headers.has('Authorization')) {
     headers.set('Authorization', `Bearer ${accessToken}`)
   }
@@ -33,7 +33,8 @@ export async function apiFetch(url: string, options: RequestInit = {}) {
   try {
     const response = await fetch(url, { ...options, headers })
 
-    const isAuthRoute = url.includes('/api/auth/login') || url.includes('/api/auth/signup')
+    const isAuthRoute =
+      url.includes('/api/auth/login') || url.includes('/api/auth/signup')
 
     if (response.status === 401 && !isAuthRoute) {
       try {
@@ -51,9 +52,12 @@ export async function apiFetch(url: string, options: RequestInit = {}) {
     return response
   } catch (err: any) {
     console.error('API Fetch error:', err)
-    return new Response(JSON.stringify({ error: 'Network error or server unreachable' }), {
-      status: 503,
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return new Response(
+      JSON.stringify({ error: 'Network error or server unreachable' }),
+      {
+        status: 503,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
   }
 }

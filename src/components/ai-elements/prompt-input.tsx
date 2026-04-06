@@ -849,7 +849,12 @@ export const PromptInput = ({
             return (formData.get('message') as string) || ''
           })()
 
-      console.log('PromptInput handleSubmit triggered. Text:', text, 'Using provider:', usingProvider);
+      console.log(
+        'PromptInput handleSubmit triggered. Text:',
+        text,
+        'Using provider:',
+        usingProvider,
+      )
 
       // Reset form immediately after capturing text to avoid race condition
       // where user input during async blob conversion would be lost
