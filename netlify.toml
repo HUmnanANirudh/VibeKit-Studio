@@ -7,4 +7,4 @@
   from = "/api/auth/*"
   to = "/.netlify/functions/auth"
   status = 200
-  force=true
+  

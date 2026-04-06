@@ -10,7 +10,7 @@ import contentCollections from '@content-collections/vite'
 let devtoolsPlugin = null
 if (process.env.NODE_ENV === 'development') {
   const mod = await import('@tanstack/devtools-vite')
-  devtoolsPlugin = (mod as any).tanstackDevtools()
+  devtoolsPlugin = (mod as any).devtools()
 }
 const config = defineConfig({
   plugins: [
